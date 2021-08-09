@@ -92,12 +92,26 @@ return [
     |
     */
 
+    'verification' => [
+        'email' => [
+            'expire' => 30,
+        ],
+        'telephone' => [
+            'expire' => 30,
+        ],
+    ],
+
+    'token' => [
+        'name' => env('AUTH_TOKEN_NAME', 'Auth Token'),
+    ],
+
     'passwords' => [
         'users' => [
             'provider' => 'users',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
+            'token'    => env('PASSWORD_RESET_TOKEN_EXPIRATION', 30),
         ],
     ],
 

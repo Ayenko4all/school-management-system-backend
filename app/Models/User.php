@@ -56,4 +56,8 @@ class User extends Authenticatable
     {
         return $this->assignRole($roles);
     }
+
+    public static function authAccessToken($param){
+        return self::where('email', $param)->first()->createToken(config('auth.token.name'));
+    }
 }
