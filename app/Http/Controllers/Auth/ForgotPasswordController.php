@@ -28,7 +28,10 @@ class ForgotPasswordController extends Controller
 
         $user->notify(new ForgotPasswordNotification($tokenData->token));
 
-        return response()->json(['message' => 'Password reset token sent successfully'],200);
+        return response()->json([
+            'status' => 'success',
+            'body' => 'Password reset token sent successfully'
+        ],200);
     }
 
     protected function generateToken()

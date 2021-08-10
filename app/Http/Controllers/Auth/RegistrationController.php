@@ -43,9 +43,7 @@ class RegistrationController extends Controller
 
         return  response()->json([
             'status' => 'success',
-            'data' => [
-                'message' => 'Registration successful, Please check your email for a verification code',
-            ]
+            'body' => 'Registration successful, Please check your email for a verification code',
         ], 201);
 
     }

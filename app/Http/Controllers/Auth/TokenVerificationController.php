@@ -42,7 +42,7 @@ class TokenVerificationController extends Controller
 
         return  response()->json([
             'status' => 'success',
-            'message' => 'Your token has been verified successfully',
+            'body' => 'Your token has been verified successfully',
         ], 200);
     }
 }

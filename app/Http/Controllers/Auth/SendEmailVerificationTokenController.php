@@ -38,7 +38,7 @@ class SendEmailVerificationTokenController extends Controller
 
         return  response()->json([
             'status' => 'success',
-            'message' => 'Please check your email for a verification code'
+            'body' => 'Please check your email for a verification code'
         ], 200);
     }
 

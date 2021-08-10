@@ -30,7 +30,7 @@ class LoginController extends Controller
 
         $user = User::where('email', $request->input('email'))->first();
 
-        if (! $user || $user->email_verified_at == null) {
+        if ($user->email_verified_at == null) {
             throw ValidationException::withMessages(['email' => 'Please verify your email']);
         }
 
