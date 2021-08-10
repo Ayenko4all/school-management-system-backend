@@ -4,13 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Module extends Model
+class SchoolType extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
-    public $guard_name = '*';
 
     /**
      * The attributes that are mass assignable.
@@ -19,10 +17,17 @@ class Module extends Model
      */
     protected $fillable = [
         'name',
-        'price',
-        'condition',
-        'status'
+        'status',
     ];
 
     protected $dates = ['deleted_at'];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+
+    ];
 }

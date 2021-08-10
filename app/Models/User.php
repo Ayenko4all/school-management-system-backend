@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\RoleEnum;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -12,7 +13,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory,HasRoles, Notifiable, HasApiTokens;
+    use HasFactory,HasRoles, Notifiable, HasApiTokens, SoftDeletes;
 
     public $guard_name = '*';
 
@@ -29,7 +30,10 @@ class User extends Authenticatable
         'telephone',
         'address',
         'gender',
+        'status'
     ];
+
+    protected $dates = ['deleted_at'];
 
     /**
      * The attributes that should be hidden for arrays.

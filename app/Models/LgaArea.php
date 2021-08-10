@@ -6,11 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Module extends Model
+class LgaArea extends Model
 {
     use HasFactory, SoftDeletes;
-
-    public $guard_name = '*';
 
     /**
      * The attributes that are mass assignable.
@@ -18,11 +16,14 @@ class Module extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'price',
-        'condition',
-        'status'
+        'lga',
+        'state_id',
+        'status',
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function stateType(){
+        return $this->belongsTo(State::class,'state_id');
+    }
 }

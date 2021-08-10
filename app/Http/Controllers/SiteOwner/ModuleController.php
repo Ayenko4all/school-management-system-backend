@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\SiteOwner;
 
+use App\Enums\StatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ModuleResource;
 use App\Models\Module;
@@ -25,15 +26,14 @@ class ModuleController extends Controller
         $request->validate([
             'name' => ['required','string','unique:modules,name'],
             'price' => ['required','numeric'],
-            'condition'  => ['required','string'],
-            'status'    => ['required', 'string']
+            'condition'  => ['required','string']
         ]);
 
        $module = Module::create([
-            'name' => $request->name,
-            'price' => $request->price,
+            'name'      => $request->name,
+            'price'     => $request->price,
             'condition' => $request->condition,
-            'status'    => $request->status
+            'status'    => StatusEnum::ACTIVE
         ]);
 
         return  response()->json([
@@ -63,7 +63,10 @@ class ModuleController extends Controller
 
         return  response()->json([
             'status' => 'success',
-            'body'   => 'Module updated successfully.',
+            'message'=>'Module updated successfully.',
+            'data'   => [
+                'module'    => new ModuleResource($module)
+            ],
         ], 201);
     }
 
@@ -73,6 +76,14 @@ class ModuleController extends Controller
             'data' => [
                 'modules' => new ModuleResource($module)
             ]
+        ], 200);
+    }
+
+    public function destroy(Module $module){
+        $module->delete();
+        return  response()->json([
+            'status' => 'success',
+            'body'   => 'Module deleted successfully.',
         ], 200);
     }
 }

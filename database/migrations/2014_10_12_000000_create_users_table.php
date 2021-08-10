@@ -25,6 +25,8 @@ class CreateUsersTable extends Migration
             $table->text('address')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('telephone_verified_at')->nullable();
+            $table->string('status')->default('active');
+            $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
         });

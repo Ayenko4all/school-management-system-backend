@@ -6,11 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Module extends Model
+class State extends Model
 {
     use HasFactory, SoftDeletes;
-
-    public $guard_name = '*';
 
     /**
      * The attributes that are mass assignable.
@@ -18,11 +16,23 @@ class Module extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'price',
-        'condition',
-        'status'
+        'state',
+        'lga',
+        'status',
     ];
 
     protected $dates = ['deleted_at'];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+
+    ];
+
+    public function lgaAreas(){
+        return $this->hasMany(LgaArea::class,'state_id');
+    }
 }

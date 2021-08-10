@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Enums\RoleEnum;
+use App\Enums\StatusEnum;
 use App\Enums\VerificationEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegistrationFormRequest;
@@ -25,12 +26,13 @@ class RegistrationController extends Controller
         Token::where('email', $request->email)->where('type', VerificationEnum::VERIFICATION)->delete();
 
          User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'gender' => $request->gender,
-           'telephone' => $request->telephone,
-           'password' => Hash::make($request->password),
+             'first_name'   => $request->first_name,
+             'last_name'    => $request->last_name,
+             'email'        => $request->email,
+             'gender'       => $request->gender,
+             'telephone'    => $request->telephone,
+             'password'     => Hash::make($request->password),
+             'status'       => StatusEnum::ACTIVE
         ])->assignRoleToUser([RoleEnum::USER]);
 
         $tokenData = Token::create([
