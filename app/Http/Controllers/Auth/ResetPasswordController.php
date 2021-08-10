@@ -29,6 +29,9 @@ class ResetPasswordController extends Controller
 
         $token->delete();
 
-        return response()->json(['message' => 'Password was successfully reset'],200);
+        return response()->json([
+            'status' => 'success',
+            'body' => 'Password was successfully reset'
+        ],200);
     }
 }
