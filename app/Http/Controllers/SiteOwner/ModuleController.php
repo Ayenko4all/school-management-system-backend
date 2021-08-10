@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\SchoolOwner;
+namespace App\Http\Controllers\SiteOwner;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ModuleResource;
