@@ -4,12 +4,13 @@ namespace App\Http\Controllers\SiteOwner;
 
 use App\Enums\StatusEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\RespondsWithHttpStatusController;
 use App\Http\Resources\SchoolTypeResource;
 use App\Models\SchoolType;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class SchoolTypeController extends Controller
+class SchoolTypeController extends RespondsWithHttpStatusController
 {
     /**
      * Display a listing of the resource.
@@ -19,12 +20,9 @@ class SchoolTypeController extends Controller
     public function index()
     {
         $schoolTypes = SchoolType::latest()->paginate(10);
-        return  response()->json([
-            'status' => 'success',
-            'data' => [
-                'schoolTypes' => SchoolTypeResource::collection($schoolTypes)->response()->getData(true)
-            ]
-        ], 200);
+        return  $this->respond([
+            'schoolTypes' => SchoolTypeResource::collection($schoolTypes)->response()->getData(true)
+        ]);
     }
 
     /**
@@ -54,23 +52,22 @@ class SchoolTypeController extends Controller
             'status'    =>  StatusEnum::ACTIVE
         ]);
 
-        return  response()->json([
-            'status' => 'success',
-            'data' => [
-                'schoolType' => new SchoolTypeResource($schoolType)
-            ]
-        ], 201);
+        return $this->responseCreated([
+            'schoolType' => new SchoolTypeResource($schoolType)
+        ], 'Type created successfully.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  $schoolType
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(SchoolType $schoolType)
     {
-        //
+        return  $this->respond([
+            'schoolType' => new SchoolTypeResource($schoolType)
+        ]);
     }
 
     /**
@@ -104,10 +101,9 @@ class SchoolTypeController extends Controller
             'status'    =>  $request->status
         ]);
 
-        return  response()->json([
-            'status' => 'success',
-            'body'   => 'Type updated successfully.',
-        ], 201);
+        return $this->responseCreated([
+            'data'   => ['type' => new SchoolTypeResource($schoolType)]
+        ], 'Type updated successfully.');
     }
 
     /**
@@ -119,9 +115,8 @@ class SchoolTypeController extends Controller
     public function destroy(SchoolType $schoolType)
     {
         $schoolType->delete();
-        return  response()->json([
-            'status' => 'success',
-            'body'   => 'Type deleted successfully.',
-        ], 200);
+        return  $this->responseOk((string)[
+            'message' => 'Type deleted successfully.',
+        ]);
     }
 }

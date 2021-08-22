@@ -26,7 +26,7 @@ class VerifyTokenFormRequest extends FormRequest
     {
         return [
             'email'     => ['required','email','exists:tokens,email'],
-            'token'     => ['required', 'digits:6'],
+            'token'     => ['required', 'digits:6', 'exists:tokens,token'],
             'type'      => ['required','string',
                 function ($attribute, $value, $fail) {
                     if (filled($value)) {

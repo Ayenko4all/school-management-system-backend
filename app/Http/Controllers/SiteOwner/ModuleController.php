@@ -4,21 +4,19 @@ namespace App\Http\Controllers\SiteOwner;
 
 use App\Enums\StatusEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\RespondsWithHttpStatusController;
 use App\Http\Resources\ModuleResource;
 use App\Models\Module;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class ModuleController extends Controller
+class ModuleController extends RespondsWithHttpStatusController
 {
     public function index(){
         $modules = Module::latest()->paginate(10);
-        return  response()->json([
-            'status' => 'success',
-            'data' => [
-                'modules' => ModuleResource::collection($modules)->response()->getData(true)
-            ]
-        ], 200);
+        return  $this->respond([
+           'modules' => ModuleResource::collection($modules)->response()->getData(true)
+        ]);
     }
 
     public function store(Request $request){
@@ -36,12 +34,9 @@ class ModuleController extends Controller
             'status'    => StatusEnum::ACTIVE
         ]);
 
-        return  response()->json([
-            'status' => 'success',
-            'data' => [
-                'module' => new ModuleResource($module),
-            ]
-        ], 201);
+        return  $this->responseCreated([
+           'module' => new ModuleResource($module)
+        ], 'Module created successfully');
     }
 
     public function update(Request $request, Module $module){
@@ -61,29 +56,21 @@ class ModuleController extends Controller
         ]);
 
 
-        return  response()->json([
-            'status' => 'success',
-            'message'=>'Module updated successfully.',
-            'data'   => [
-                'module'    => new ModuleResource($module)
-            ],
-        ], 201);
+        return  $this->responseCreated([
+            'module'    => new ModuleResource($module)
+        ], 'Module Updated Successfully');
     }
 
     public function show(Module $module){
-        return  response()->json([
-            'status' => 'success',
-            'data' => [
-                'modules' => new ModuleResource($module)
-            ]
-        ], 200);
+        return  $this->respond([
+            'modules' => new ModuleResource($module)
+        ]);
     }
 
     public function destroy(Module $module){
         $module->delete();
-        return  response()->json([
-            'status' => 'success',
-            'body'   => 'Module deleted successfully.',
-        ], 200);
+        return  $this->responseOk((string)[
+            'message' => 'Module deleted successfully.',
+        ]);
     }
 }

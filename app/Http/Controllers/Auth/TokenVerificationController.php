@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Enums\VerificationEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\RespondsWithHttpStatusController;
 use App\Http\Requests\VerifyTokenFormRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Token;
@@ -12,7 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
-class TokenVerificationController extends Controller
+class TokenVerificationController extends RespondsWithHttpStatusController
 {
     public function __invoke(VerifyTokenFormRequest $request)
     {
@@ -40,9 +41,6 @@ class TokenVerificationController extends Controller
             $token->delete();
         }
 
-        return  response()->json([
-            'status' => 'success',
-            'body' => 'Your token has been verified successfully',
-        ], 200);
+        return  $this->responseOk((string)['message' => 'Your token has been verified successfully']);
     }
 }

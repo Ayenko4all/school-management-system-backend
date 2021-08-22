@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -64,4 +64,15 @@ class User extends Authenticatable
     public static function authAccessToken($param){
         return self::where('email', $param)->first()->createToken(config('auth.token.name'));
     }
+
+    public function schools(){
+        return $this->belongsToMany(School::class);
+    }
+
+    public function expiration($token){
+        $expiration = $this->tokens()->where('id', $token)->select(['expires_in'])->first();
+        return $expiration->expires_in;
+    }
+
+
 }

@@ -6,6 +6,7 @@ use App\Enums\RoleEnum;
 use App\Enums\StatusEnum;
 use App\Enums\VerificationEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\RespondsWithHttpStatusController;
 use App\Http\Requests\RegistrationFormRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Token;
@@ -15,7 +16,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class RegistrationController extends Controller
+class RegistrationController extends RespondsWithHttpStatusController
 {
     /**
      *  @param \Illuminate\Http\Request $request
@@ -43,10 +44,9 @@ class RegistrationController extends Controller
 
         \Notification::route('mail', $request->email)->notify(new SendEmailTokenNotification($tokenData->token));
 
-        return  response()->json([
-            'status' => 'success',
-            'body' => 'Registration successful, Please check your email for a verification code',
-        ], 201);
+        return  $this->responseOk((string)[
+            'message' => 'Registration successful, Please check your email for a verification code',
+        ]);
 
     }
 

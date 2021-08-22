@@ -4,12 +4,13 @@ namespace App\Http\Controllers\SiteOwner;
 
 use App\Enums\StatusEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\RespondsWithHttpStatusController;
 use App\Http\Resources\LgaAreaResource;
 use App\Models\LgaArea;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class LgaController extends Controller
+class LgaController extends RespondsWithHttpStatusController
 {
     /**
      * Display a listing of the resource.
@@ -19,12 +20,9 @@ class LgaController extends Controller
     public function index()
     {
         $lgaAreas = LgaArea::with(['stateType'])->latest()->paginate(10);
-        return  response()->json([
-            'status' => 'success',
-            'data' => [
-                'lgaAreas' => LgaAreaResource::collection($lgaAreas)->response()->getData(true)
-            ]
-        ], 200);
+        return  $this->respond([
+          'lgaAreas' => LgaAreaResource::collection($lgaAreas)->response()->getData(true)
+        ]);
     }
 
     /**
@@ -61,12 +59,9 @@ class LgaController extends Controller
             'status'    =>  StatusEnum::ACTIVE
         ]);
 
-        return  response()->json([
-            'status' => 'success',
-            'data' => [
-                'lgaArea' => new LgaAreaResource($lgaArea)
-            ]
-        ], 201);
+        return  $this->responseCreated([
+            'lgaArea' => new LgaAreaResource($lgaArea)
+        ], 'Lga created successfully');
     }
 
     /**
@@ -77,12 +72,9 @@ class LgaController extends Controller
      */
     public function show(LgaArea $lgaArea)
     {
-        return  response()->json([
-            'status' => 'success',
-            'data' => [
-                'lgaArea' => new LgaAreaResource($lgaArea->load('stateType'))
-            ]
-        ], 200);
+        return  $this->responseCreated([
+            'lgaArea' => new LgaAreaResource($lgaArea->load('stateType'))
+        ]);
     }
 
     /**
@@ -123,13 +115,9 @@ class LgaController extends Controller
             'status'    =>  $request->status
         ]);
 
-        return  response()->json([
-            'status' => 'success',
-            'message'=>'Lga updated successfully.',
-            'data' => [
-                'lgaArea' => new LgaAreaResource($lgaArea->load('stateType'))
-            ]
-        ], 201);
+        return  $this->responseCreated([
+            'data'      => ['lgaArea' => new LgaAreaResource($lgaArea->load('stateType'))]
+        ], 'Lga Updated Successfully');
     }
 
     /**
@@ -142,9 +130,6 @@ class LgaController extends Controller
     {
         $lgaArea->delete();
 
-        return  response()->json([
-            'status' => 'success',
-            'body'   => 'Lga area deleted successfully.',
-        ], 200);
+        return  $this->responseOk((string)['message' => 'Lga area deleted successfully.']);
     }
 }

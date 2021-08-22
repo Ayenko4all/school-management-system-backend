@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\RespondsWithHttpStatusController;
 use App\Http\Resources\UserResource;
+use App\Models\PersonalAccessToken;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-use Laravel\Passport\Token;
+use Laravel\Sanctum\Sanctum;
 
-class LoginController extends Controller
+class LoginController extends RespondsWithHttpStatusController
 {
     /**
      * Handle a login request to the application.
@@ -30,22 +33,24 @@ class LoginController extends Controller
 
         $user = User::where('email', $request->input('email'))->first();
 
-        if ($user->email_verified_at == null) {
-            throw ValidationException::withMessages(['email' => 'Please verify your email']);
-        }
-
         if (! $user || ! Hash::check($request->input('password'), $user->password)) {
             throw ValidationException::withMessages(['email' => trans('auth.failed')]);
         }
 
-        Token::where('user_id', $user->id)->delete();
+        if ($user->email_verified_at == null) {
+            throw ValidationException::withMessages(['email' => 'Please verify your email']);
+        }
 
-        return  response()->json([
-            'status' => 'success',
-            'data' => [
-                'user' => new UserResource($user),
-                'token'=> User::authAccessToken($request->email)->accessToken
-            ]
-        ], 200);
+        $user->tokens()->delete();
+
+        $token = $user->createToken(config('auth.token.name'));
+
+        $user->tokens()->update(['expires_in' =>  $token->accessToken->created_at->addMinute(config('sanctum.expiration'))]);
+
+        return  $this->respond([
+            'user'              => new UserResource($user),
+            'token'             => $token->plainTextToken,
+            'expires_in'   => now()->parse($token->accessToken->created_at)->diffInSeconds($user->expiration($token->accessToken->id))
+        ]);
     }
 }
