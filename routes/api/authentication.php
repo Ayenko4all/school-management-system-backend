@@ -29,7 +29,7 @@ Route::prefix('v1')->middleware('json.response')->group(function (){
     Route::post('/request-password-token', ForgotPasswordController::class)->name('requestPasswordToken.api');
     Route::patch('/reset-password', ResetPasswordController::class)->name('resetPassword.api');
 
-    Route::middleware('auth:api')->group(function () {
+    Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', LogoutController::class)->name('logout.api');
     });
 

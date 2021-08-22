@@ -25,4 +25,11 @@ class Module extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function schools(){
+        return $this->belongsToMany(School::class, 'school_modules')
+            ->withTimestamps();
+           // ->select(['modules.id','modules.name','modules.price','modules.condition']);
+    }
+
 }

@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::prefix('v1/site-owner')->middleware(['role:site-admin','auth:api','json.response'])->group(function (){
+Route::prefix('v1/site-owner')->middleware(['role:site-admin','auth:sanctum','json.response'])->group(function (){
 
     Route::prefix('/modules')->group(function (){
         Route::get('/', [ModuleController::class, 'index'])->name('index.module.api');
@@ -49,6 +49,7 @@ Route::prefix('v1/site-owner')->middleware(['role:site-admin','auth:api','json.r
         Route::patch('/{lgaArea}/update', [LgaController::class, 'update'])->name('update.lga.api');
         Route::delete('/{lgaArea}/delete', [LgaController::class, 'destroy'])->name('destroy.lga.api');
     });
+
 
 });
 

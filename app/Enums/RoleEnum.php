@@ -13,4 +13,5 @@ class RoleEnum extends  Enum {
     const TEACHER = 'teacher';
     const PARENT = 'parent';
     const USER = 'user';
+    const DIRECTOR = 'director';
 }

@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Enums\VerificationEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\RespondsWithHttpStatusController;
 use App\Models\Token;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
-class ResetPasswordController extends Controller
+class ResetPasswordController extends RespondsWithHttpStatusController
 {
     public function __invoke(Request $request)
     {
@@ -29,9 +30,6 @@ class ResetPasswordController extends Controller
 
         $token->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'body' => 'Password was successfully reset'
-        ],200);
+        return $this->responseOk((string)['message' => 'Password was successfully reset']);
     }
 }

@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Enums\VerificationEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\RespondsWithHttpStatusController;
 use App\Notifications\ForgotPasswordNotification;
 use App\Models\Token;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class ForgotPasswordController extends Controller
+class ForgotPasswordController extends RespondsWithHttpStatusController
 {
     public function  __invoke(Request $request)
     {
@@ -28,10 +29,7 @@ class ForgotPasswordController extends Controller
 
         $user->notify(new ForgotPasswordNotification($tokenData->token));
 
-        return response()->json([
-            'status' => 'success',
-            'body' => 'Password reset token sent successfully'
-        ],200);
+        return $this->responseOk((string)['message' => 'Password reset token sent successfully']);
     }
 
     protected function generateToken()

@@ -30,4 +30,8 @@ class SchoolType extends Model
     protected $casts = [
 
     ];
+
+    public function schools(){
+        return $this->belongsToMany(School::class);
+    }
 }

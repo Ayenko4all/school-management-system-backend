@@ -4,12 +4,13 @@ namespace App\Http\Controllers\SiteOwner;
 
 use App\Enums\StatusEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\RespondsWithHttpStatusController;
 use App\Http\Resources\StateResource;
 use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class StateController extends Controller
+class StateController extends RespondsWithHttpStatusController
 {
     /**
      * Display a listing of the resource.
@@ -19,12 +20,9 @@ class StateController extends Controller
     public function index()
     {
         $states = State::with('lgaAreas')->latest()->paginate(10);
-        return  response()->json([
-            'status' => 'success',
-            'data' => [
-                'locations' => StateResource::collection($states)->response()->getData(true)
-            ]
-        ], 200);
+        return  $this->respond([
+            'locations' => StateResource::collection($states)->response()->getData(true)
+        ]);
     }
 
     /**
@@ -54,12 +52,9 @@ class StateController extends Controller
             'status'    =>  StatusEnum::ACTIVE
         ]);
 
-        return  response()->json([
-            'status' => 'success',
-            'data' => [
-                'state' => new StateResource($state)
-            ]
-        ], 201);
+        return  $this->responseCreated([
+            'state' => new StateResource($state)
+        ], 'State created successfully.');
     }
 
     /**
@@ -70,12 +65,9 @@ class StateController extends Controller
      */
     public function show(State $state)
     {
-        return  response()->json([
-            'status' => 'success',
-            'data' => [
-                'state' => new StateResource($state->load('lgaAreas'))
-            ]
-        ], 200);
+        return $this->respond([
+            'state' => new StateResource($state->load('lgaAreas'))
+        ]);
     }
 
     /**
@@ -108,13 +100,9 @@ class StateController extends Controller
             'status'    =>  $request->status
         ]);
 
-        return  response()->json([
-            'status' => 'success',
-            'message'=>'State updated successfully.',
-            'data' => [
-                'state' => new StateResource($state->load('lgaAreas'))
-            ]
-        ], 201);
+        return  $this->responseCreated([
+            'state' => new StateResource($state->load('lgaAreas'))
+        ], 'State updated successfully.');
     }
 
     /**
@@ -127,9 +115,6 @@ class StateController extends Controller
     {
         $state->delete();
 
-        return  response()->json([
-            'status' => 'success',
-            'body'   => 'Location deleted successfully.',
-        ], 200);
+        return  $this->responseOk((string)['message' => 'Location deleted successfully.']);
     }
 }
