@@ -7,6 +7,7 @@ use App\Http\Controllers\RespondsWithHttpStatusController;
 use App\Http\Requests\SchoolSetUpFormRequest;
 use App\Http\Resources\SchoolResource;
 use App\Models\School;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Actions\CreateOwnerAction;
 
@@ -16,10 +17,14 @@ class SchoolController extends RespondsWithHttpStatusController
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function index()
     {
         $schools = School::with(['user','school_type','directors'])->latest()->paginate(10);
+        //dd($schools);
+       // $this->authorize('view', $schools);
+
         return  $this->respond([
             'schools' => SchoolResource::collection($schools)->response()->getData(true)
         ]);
@@ -41,9 +46,12 @@ class SchoolController extends RespondsWithHttpStatusController
      * @param SchoolSetUpFormRequest $request
      * @param CreateOwnerAction $createOwnerAction
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function store(SchoolSetUpFormRequest $request, CreateOwnerAction $createOwnerAction)
     {
+
+        $this->authorize('create', auth()->user());
 
         $school = School::create([
             'user_id'                   => auth()->id(),
@@ -77,10 +85,14 @@ class SchoolController extends RespondsWithHttpStatusController
      *
      * @param School $school
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(School $school)
     {
+        $this->authorize('view', $school);
+
         $school->load(['user','school_type','directors']);
+
         return  $this->respond([
             'school' =>  new SchoolResource($school)
         ]);

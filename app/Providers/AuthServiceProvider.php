@@ -2,9 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\PersonalAccessToken;
+use App\Models\School;
+use App\Policies\SchoolPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
+use Laravel\Sanctum\Sanctum;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -15,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         'App\Models\Model' => 'App\Policies\ModelPolicy',
+        School::class => SchoolPolicy::class,
     ];
 
     /**
@@ -26,8 +31,11 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        if (! $this->app->routesAreCached()) {
-            Passport::routes();
-        }
+        Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
+
+//        if (! $this->app->routesAreCached()) {
+//            Passport::routes();
+//        }
+
     }
 }

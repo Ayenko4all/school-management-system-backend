@@ -27,9 +27,17 @@ class RegistrationFormRequest extends FormRequest
             'first_name'    => ['required', 'string'],
             'last_name'     => ['required', 'string'],
             'email'         => ['required', 'email', 'unique:users,email'],
-            'gender'        => ['required', 'string'],
             'password'      => ['required', 'string', 'min:8', 'confirmed'],
             'telephone'     => ['required', 'string', 'numeric','unique:users'],
+            'gender'      => ['required','string',
+                function ($attribute, $value, $fail) {
+                    if (filled($value)) {
+                        $Types = collect(['male','female']);
+                        if(! $Types->contains($value)){
+                            $fail($attribute.' is not valid.');
+                        }
+                    }
+                },],
         ];
     }
 }
