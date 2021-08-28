@@ -34,7 +34,7 @@ class RegistrationFormRequest extends FormRequest
                     if (filled($value)) {
                         $Types = collect(['male','female']);
                         if(! $Types->contains($value)){
-                            $fail($attribute.' is not valid.');
+                            $fail('The selected '. $attribute.' is not valid.');
                         }
                     }
                 },],
