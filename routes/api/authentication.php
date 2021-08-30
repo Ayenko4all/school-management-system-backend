@@ -30,7 +30,7 @@ Route::prefix('v1')->middleware('json.response')->group(function (){
     Route::patch('/reset-password', ResetPasswordController::class)->name('resetPassword.api');
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/logout', LogoutController::class)->name('logout.api');
+        Route::delete('/logout', LogoutController::class)->name('logout.api');
     });
 
 
