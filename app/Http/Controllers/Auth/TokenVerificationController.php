@@ -25,11 +25,11 @@ class TokenVerificationController extends RespondsWithHttpStatusController
             throw ValidationException::withMessages(['token' => 'Token is invalid']);
         }
 
-        if ($token->type == VerificationEnum::VERIFICATION && Carbon::parse($token->created_at)->addMinutes(config('auth.verification.email.expire'))->isPast()) {
+        if ($token->type == VerificationEnum::VERIFICATION && Carbon::parse($token->updated_at)->addMinutes(config('auth.verification.email.expire'))->isPast()) {
             throw ValidationException::withMessages(['token' => 'Token has expired']);
         }
 
-        if ($token->type == VerificationEnum::PASSWORD && Carbon::parse($token->created_at)->addMinutes(config('auth.passwords.users.token'))->isPast()) {
+        if ($token->type == VerificationEnum::PASSWORD && Carbon::parse($token->updated_at)->addMinutes(config('auth.passwords.users.token'))->isPast()) {
             throw ValidationException::withMessages(['token' => 'Token has expired']);
         }
 
