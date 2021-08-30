@@ -41,6 +41,6 @@ class TokenVerificationController extends RespondsWithHttpStatusController
             $token->delete();
         }
 
-        return  $this->responseOk((string)['message' => 'Your token has been verified successfully']);
+        return  $this->responseOk(['message' => 'Your token has been verified successfully']);
     }
 }

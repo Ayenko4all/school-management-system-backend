@@ -130,6 +130,6 @@ class LgaController extends RespondsWithHttpStatusController
     {
         $lgaArea->delete();
 
-        return  $this->responseOk((string)['message' => 'Lga area deleted successfully.']);
+        return  $this->responseOk(['message' => 'Lga area deleted successfully.']);
     }
 }

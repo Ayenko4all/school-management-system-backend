@@ -29,7 +29,7 @@ class ForgotPasswordController extends RespondsWithHttpStatusController
 
         $user->notify(new ForgotPasswordNotification($tokenData->token));
 
-        return $this->responseOk((string)['message' => 'Password reset token sent successfully']);
+        return $this->responseOk(['message' => 'Password reset token sent successfully']);
     }
 
     protected function generateToken()

@@ -37,7 +37,7 @@ class SendEmailVerificationTokenController extends RespondsWithHttpStatusControl
 
         \Notification::route('mail', $request->email)->notify(new SendEmailTokenNotification($tokenData->token));
 
-        return $this->responseOk((string)['message' => 'Please check your email for a verification code']);
+        return $this->responseOk(['message' => 'Please check your email for a verification code']);
     }
 
 

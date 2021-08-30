@@ -115,6 +115,6 @@ class StateController extends RespondsWithHttpStatusController
     {
         $state->delete();
 
-        return  $this->responseOk((string)['message' => 'Location deleted successfully.']);
+        return  $this->responseOk(['message' => 'Location deleted successfully.']);
     }
 }

@@ -115,7 +115,7 @@ class SchoolTypeController extends RespondsWithHttpStatusController
     public function destroy(SchoolType $schoolType)
     {
         $schoolType->delete();
-        return  $this->responseOk((string)[
+        return  $this->responseOk([
             'message' => 'Type deleted successfully.',
         ]);
     }

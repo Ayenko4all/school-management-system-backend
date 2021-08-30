@@ -30,6 +30,6 @@ class ResetPasswordController extends RespondsWithHttpStatusController
 
         $token->delete();
 
-        return $this->responseOk((string)['message' => 'Password was successfully reset']);
+        return $this->responseOk(['message' => 'Password was successfully reset']);
     }
 }

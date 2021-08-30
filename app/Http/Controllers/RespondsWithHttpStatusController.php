@@ -31,7 +31,7 @@ class RespondsWithHttpStatusController extends Controller
         return response()->json([
             'status' => 'success',
             'status_code' => Response::HTTP_OK,
-            'message' => $message
+            'data' => $message
         ], Response::HTTP_OK);
     }
 

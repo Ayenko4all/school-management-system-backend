@@ -69,7 +69,7 @@ class ModuleController extends RespondsWithHttpStatusController
 
     public function destroy(Module $module){
         $module->delete();
-        return  $this->responseOk((string)[
+        return  $this->responseOk([
             'message' => 'Module deleted successfully.',
         ]);
     }

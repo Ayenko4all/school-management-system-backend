@@ -44,7 +44,7 @@ class RegistrationController extends RespondsWithHttpStatusController
 
         \Notification::route('mail', $request->email)->notify(new SendEmailTokenNotification($tokenData->token));
 
-        return  $this->responseOk((string)[
+        return  $this->responseOk([
             'message' => 'Registration successful, Please check your email for a verification code',
         ]);
 
