@@ -36,7 +36,7 @@ class TokenVerificationController extends RespondsWithHttpStatusController
         Token::where(['email' => $request->email,'token' => $request->token])
             ->update([ 'verified'  => true]);
 
-        if(User::where(['email' => $request->email,'email_verified_at' => null])->first()){
+        if($token->type == VerificationEnum::VERIFICATION  && User::where(['email' => $request->email,'email_verified_at' => null])->first()){
             User::where('email', $request->email)->update(['email_verified_at' => now()]);
             $token->delete();
         }
