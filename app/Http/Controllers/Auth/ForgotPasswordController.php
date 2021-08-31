@@ -19,11 +19,14 @@ class ForgotPasswordController extends RespondsWithHttpStatusController
         $user = User::where('email', $request->email)->firstOrFail();
 
         $tokenData = Token::updateOrCreate(
-            ['email' => $user->email,'type'  => VerificationEnum::PASSWORD],
+            [   'email' => $user->email,
+                'type'  => VerificationEnum::PASSWORD
+            ],
             [
-            'email' => $user->email,
-            'token' => $this->generateToken(),
-            'type'  => VerificationEnum::PASSWORD
+                'email' => $user->email,
+                'token' => $this->generateToken(),
+                'type'  => VerificationEnum::PASSWORD,
+                'verify' => false
             ]
         );
 
