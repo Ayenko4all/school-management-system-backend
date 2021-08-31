@@ -37,7 +37,7 @@ class RegistrationController extends RespondsWithHttpStatusController
         ])->assignRoleToUser([RoleEnum::USER]);
 
         $tokenData = Token::create([
-            'token' =>  $this->generateToken(),
+            'token' =>  generateToken(),
             'email' => $request->email,
             'type' => VerificationEnum::VERIFICATION
         ]);
@@ -50,14 +50,7 @@ class RegistrationController extends RespondsWithHttpStatusController
 
     }
 
-    protected function generateToken()
-    {
-        do {
-            $token = mt_rand(100000, 999999);
-        } while (Token::where('token', $token)->exists());
 
-        return (string) $token;
-    }
 
 
 }

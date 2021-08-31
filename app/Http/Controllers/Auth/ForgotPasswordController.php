@@ -14,19 +14,19 @@ class ForgotPasswordController extends RespondsWithHttpStatusController
 {
     public function  __invoke(Request $request)
     {
-        $request->validate(['email' => ['required', 'email', 'exists:users']]);
+        $request->validate(['email' => ['required', 'email', 'exists:users,email']]);
+
+       Token::where('email', $request->email)
+           ->where('type', VerificationEnum::PASSWORD)
+           ->delete();
 
         $user = User::where('email', $request->email)->firstOrFail();
 
-        $tokenData = Token::updateOrCreate(
-            [   'email' => $user->email,
-                'type'  => VerificationEnum::PASSWORD
-            ],
+        $tokenData = Token::create(
             [
-                'email' => $user->email,
-                'token' => $this->generateToken(),
-                'type'  => VerificationEnum::PASSWORD,
-                'verified' => false
+                'email'     => $user->email,
+                'token'     => generateToken(),
+                'type'      => VerificationEnum::PASSWORD
             ]
         );
 
@@ -35,12 +35,5 @@ class ForgotPasswordController extends RespondsWithHttpStatusController
         return $this->responseOk(['message' => 'Password reset token sent successfully']);
     }
 
-    protected function generateToken()
-    {
-        do {
-            $token = mt_rand(100000, 999999);
-        } while (Token::where('token', $token)->exists());
 
-        return (string) $token;
-    }
 }

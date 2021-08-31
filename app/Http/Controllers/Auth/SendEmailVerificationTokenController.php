@@ -21,33 +21,26 @@ class SendEmailVerificationTokenController extends RespondsWithHttpStatusControl
             'email'   => ['required','email','exists:users,email'],
         ]);
 
+        Token::where('email', $request->email)
+            ->where('type', VerificationEnum::VERIFICATION)
+            ->delete();
+
         $user = User::where('email', $request->email)->first();
 
         if ($user->email_verified_at != null) {
             throw ValidationException::withMessages(['email' => 'You have already verify your email']);
         }
 
-        $tokenData = Token::updateOrCreate(
-            ['email' => $request->email,'type' => VerificationEnum::VERIFICATION],
+        $tokenData = Token::create(
             [
-            'token' =>  $this->generateToken(),
-            'email' => $request->email,
-            'type' => VerificationEnum::VERIFICATION
-        ]);
+                'token' =>  generateToken(),
+                'email' => $request->email,
+                'type' => VerificationEnum::VERIFICATION
+            ]
+        );
 
         \Notification::route('mail', $request->email)->notify(new SendEmailTokenNotification($tokenData->token));
 
         return $this->responseOk(['message' => 'Please check your email for a verification code']);
-    }
-
-
-
-    protected function generateToken()
-    {
-        do {
-            $token = mt_rand(100000, 999999);
-        } while (Token::where('token', $token)->exists());
-
-        return (string) $token;
     }
 }
