@@ -26,7 +26,7 @@ class ForgotPasswordController extends RespondsWithHttpStatusController
                 'email' => $user->email,
                 'token' => $this->generateToken(),
                 'type'  => VerificationEnum::PASSWORD,
-                'verify' => false
+                'verified' => false
             ]
         );
 
