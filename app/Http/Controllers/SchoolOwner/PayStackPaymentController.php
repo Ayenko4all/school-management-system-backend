@@ -44,11 +44,12 @@ class PayStackPaymentController extends RespondsWithHttpStatusController
                 'reference'  => ['required', 'string']
             ]);
 
+            $key = config('auth.paystack.api_key.sk_test');
             $url = config('auth.paystack.url.verify').$request->reference;
             $ch = curl_init();
             curl_setopt($ch,CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                "Authorization: Bearer sk_test_46c6dfddcf73f9d98552d8fbddb20bf9d269f449",
+                "Authorization: Bearer {$key}",
                 "Cache-Control: no-cache",
             ));
 
