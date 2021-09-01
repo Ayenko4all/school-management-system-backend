@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SchoolOwner\PayStackPaymentController;
 use App\Http\Controllers\SchoolOwner\SchoolController;
 use App\Http\Controllers\SchoolOwner\SchoolOwnerController;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,11 @@ Route::prefix('v1')->middleware(['role:school-owner','auth:sanctum','json.respon
         Route::get('/{director}', [SchoolOwnerController::class, 'show'])->name('show.director.api');
         Route::patch('/{director}/update', [SchoolOwnerController::class, 'update'])->name('update.director.api');
         Route::delete('/{director}/delete', [SchoolOwnerController::class, 'destroy'])->name('destroy.director.api');
+    });
+
+    Route::prefix('/paystack')->group(function (){
+        Route::post('pay', [PayStackPaymentController::class, 'pay']);
+        Route::get('verify', [PayStackPaymentController::class, 'verify']);
     });
 
 
