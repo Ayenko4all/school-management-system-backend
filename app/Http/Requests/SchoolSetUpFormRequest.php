@@ -23,8 +23,8 @@ class SchoolSetUpFormRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
-            'school_name'               => ['required', 'string'],
+        return [
+            'school_name'               => ['required', 'string','unique:schools,school_name'],
             'school_address'            => ['required', 'string'],
             'bvn'                       => ['required', 'numeric', 'digits:11'],
             'city'                      => ['required', 'string'],
@@ -32,12 +32,10 @@ class SchoolSetUpFormRequest extends FormRequest
             'state'                     => ['required', 'string'],
             'school_email_address'      => ['required', 'string', 'unique:schools,school_email_address'],
             'school_telephone_address'  => ['required', 'string', 'unique:schools,school_telephone_address'],
-            'school_type_id'               => ['required', 'exists:school_types,id'],
+            'school_type_id'            => ['required', 'exists:school_types,id'],
             'cac_document'              => ['nullable', 'file'],
+            'amount'                    => ['required', 'numeric'],
         ];
-
-
-        return $rules;
 
     }
 

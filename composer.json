@@ -15,7 +15,9 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "spatie/laravel-permission": "^4.0",
-        "fakerphp/faker": "^1.9.1"
+        "fakerphp/faker": "^1.9.1",
+        "ext-curl": "*",
+        "ext-json": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

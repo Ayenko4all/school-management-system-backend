@@ -11,11 +11,12 @@ class RespondsWithHttpStatusController extends Controller
     /**
      * Return statusCode 200.
      * @param null|array|Model $data
+     * @param $status
      * @return \Illuminate\Http\JsonResponse
      */
-    public function respond(Array $data){
+    public function respond(Array $data, $status = 'success'){
         return response()->json([
-            'status' => 'success',
+            'status' => $status,
             'status_code' => Response::HTTP_OK,
             'data'  => $data
         ], Response::HTTP_OK);
