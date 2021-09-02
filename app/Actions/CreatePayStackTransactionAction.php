@@ -16,7 +16,7 @@ class CreatePayStackTransactionAction {
             'email' => auth()->user()->email,
             'amount' => $request->amount * 100,
             'reference' => generateReferenceCode(),
-            'callback_url' => config('auth.paystack.url.callback'),
+            'callback_url' => config('auth.paystack.url.verify'),
             'metadata' => [
                 'school_name' => $request->school_name,
                 'school_address' => $request->school_address,
@@ -52,6 +52,8 @@ class CreatePayStackTransactionAction {
 
         //execute post
         $result = curl_exec($ch);
+
+        //dd(json_decode($result, true));
 
         return [json_decode($result, true)];
     }

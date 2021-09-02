@@ -41,7 +41,7 @@ class PayStackPaymentController extends RespondsWithHttpStatusController
      * @throws ValidationException
      */
     public function verify(Request $request){
-
+       dd($request->all());
         $key = config('auth.paystack.api_key.sk_test');
         $url = config('auth.paystack.url.verify').$request->reference;
         $ch = curl_init();
@@ -56,15 +56,7 @@ class PayStackPaymentController extends RespondsWithHttpStatusController
         $result = curl_exec($ch);
 
         $decodedResult =json_decode($result, true);
-
-        if (!$decodedResult){
-            throw ValidationException::withMessages(['message' => 'The serve run with an empty result']);
-        }
-
-        if ($decodedResult['data'][' gateway_response'] !== 'Successful'){
-            throw ValidationException::withMessages(['message' => 'Transaction was not completed, window closed']);
-        }
-
+        
         dd($decodedResult);
 
         return response()->json([

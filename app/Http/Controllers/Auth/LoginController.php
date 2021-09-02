@@ -34,11 +34,11 @@ class LoginController extends RespondsWithHttpStatusController
         $user = User::where('email', $request->input('email'))->first();
 
         if (! $user || ! Hash::check($request->input('password'), $user->password)) {
-            throw ValidationException::withMessages(['email' => trans('auth.failed')]);
+            throw ValidationException::withMessages(['message' => trans('auth.failed')]);
         }
 
         if ($user->email_verified_at == null) {
-            throw ValidationException::withMessages(['email' => 'Please verify your email']);
+            throw ValidationException::withMessages(['message' => 'Please verify your email']);
         }
 
         $user->tokens()->delete();

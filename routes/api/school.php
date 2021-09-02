@@ -36,13 +36,13 @@ Route::prefix('v1')->middleware(['json.response'])->group(function (){
         });
 
         Route::prefix('/paystack')->group(function (){
-            Route::post('pay', [PayStackPaymentController::class, 'pay']);
-            Route::get('verify', [PayStackPaymentController::class, 'verify']);
+            Route::post('pay', [PayStackPaymentController::class, 'pay'])->name('paystack.pay.api');
+            Route::get('verify', [PayStackPaymentController::class, 'verify'])->name('paystack.verify.api');
         });
 
     });
 
-    Route::post('/payment/webhook', [PayStackPaymentController::class,'handleGatewayWebHook'])->name('webhook');
+    Route::post('/payment/webhook', [PayStackPaymentController::class,'handleGatewayWebHook'])->name('paystack.webhook.api');
 
 });
 
