@@ -38,7 +38,7 @@ class LoginController extends RespondsWithHttpStatusController
         }
 
         if ($user->email_verified_at == null) {
-            throw ValidationException::withMessages(['message' => 'Please verify your email'. route('request-email-token')]);
+            throw ValidationException::withMessages(['message' => 'Please verify your email']);
         }
 
         $user->tokens()->delete();
