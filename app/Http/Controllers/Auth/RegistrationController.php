@@ -24,7 +24,7 @@ class RegistrationController extends RespondsWithHttpStatusController
      */
     public function __invoke(RegistrationFormRequest $request)
     {
-        Token::where('email', $request->email)->where('type', VerificationEnum::VERIFICATION)->delete();
+        Token::where('email', $request->email)->where('type', VerificationEnum::Email)->delete();
 
          User::create([
              'first_name'   => $request->first_name,
