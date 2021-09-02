@@ -39,7 +39,7 @@ class RegistrationController extends RespondsWithHttpStatusController
         $tokenData = Token::create([
             'token' =>  generateToken(),
             'email' => $request->email,
-            'type' => VerificationEnum::VERIFICATION
+            'type' => VerificationEnum::Email
         ]);
 
         \Notification::route('mail', $request->email)->notify(new SendEmailTokenNotification($tokenData->token));

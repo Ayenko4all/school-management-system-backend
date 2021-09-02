@@ -6,6 +6,6 @@ use Konekt\Enum\Enum;
 
 class VerificationEnum extends  Enum {
 
-    const VERIFICATION  = 'verification';
-    const PASSWORD      =   'password';
+    const Email  = 'email';
+    const PASSWORD      =  'password';
 }

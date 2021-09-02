@@ -22,7 +22,7 @@ class SendEmailVerificationTokenController extends RespondsWithHttpStatusControl
         ]);
 
         Token::where('email', $request->email)
-            ->where('type', VerificationEnum::VERIFICATION)
+            ->where('type', VerificationEnum::Email)
             ->delete();
 
         $user = User::where('email', $request->email)->first();
@@ -35,7 +35,7 @@ class SendEmailVerificationTokenController extends RespondsWithHttpStatusControl
             [
                 'token' =>  generateToken(),
                 'email' => $request->email,
-                'type' => VerificationEnum::VERIFICATION
+                'type' => VerificationEnum::Email
             ]
         );
 
