@@ -15,3 +15,17 @@ if (! function_exists('generateToken')) {
         return (string) $token;
     }
 }
+
+if (! function_exists('generateReferenceCode')) {
+    /**
+     * Generate a user's referral code.
+     *
+     * @return string
+     * @throws Exception
+     */
+    function generateReferenceCode()
+    {
+        return bin2hex(random_bytes(3));
+
+    }
+}

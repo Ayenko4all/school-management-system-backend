@@ -118,7 +118,8 @@ return [
     'paystack' => [
         'url' => [
             'transaction' => env('PAYSTACK_PAYMENT_INITIALIZATION'),
-            'verify' => env('PAYSTACK_PAYMENT_VERIFICATION')
+            'verify' => env('PAYSTACK_PAYMENT_VERIFICATION'),
+            'callback' => env('PAYSTACK_PAYMENT_VERIFICATION')
         ],
         'api_key' => [
             'sk_test' => env('PAYSTACK_SK_TEST_KEY')

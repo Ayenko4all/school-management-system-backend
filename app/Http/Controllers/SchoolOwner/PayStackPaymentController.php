@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\RespondsWithHttpStatusController;
 use App\Http\Requests\SchoolSetUpFormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class PayStackPaymentController extends RespondsWithHttpStatusController
 {
@@ -37,37 +38,52 @@ class PayStackPaymentController extends RespondsWithHttpStatusController
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws ValidationException
      */
-        public function verify(Request $request){
+    public function verify(Request $request){
 
-            $request->validate([
-                'reference'  => ['required', 'string']
-            ]);
+        $key = config('auth.paystack.api_key.sk_test');
+        $url = config('auth.paystack.url.verify').$request->reference;
+        $ch = curl_init();
+        curl_setopt($ch,CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            "Authorization: Bearer {$key}",
+            "Cache-Control: no-cache",
+        ));
 
-            $key = config('auth.paystack.api_key.sk_test');
-            $url = config('auth.paystack.url.verify').$request->reference;
-            $ch = curl_init();
-            curl_setopt($ch,CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                "Authorization: Bearer {$key}",
-                "Cache-Control: no-cache",
-            ));
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
 
-            curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
 
-            $result = curl_exec($ch);
+        $decodedResult =json_decode($result, true);
 
-            $decodedValue =json_decode($result, true);
-
-            return response()->json([
-                'status' =>   $decodedValue['data']['status'] === 'success' ? 'success' : 'fail',
-               'data' => [
-                   'reference' => $decodedValue['data']['reference'],
-                   'amount' => $decodedValue ['data']['amount'],
-                   'metadata' => $decodedValue['data']['metadata'],
-                   'paid_at' => $decodedValue['data']['paid_at'],
-                   'created_at' => $decodedValue['data']['created_at']
-               ]
-            ]);
+        if (!$decodedResult){
+            throw ValidationException::withMessages(['message' => 'The serve run with an empty result']);
         }
+
+        if ($decodedResult['data'][' gateway_response'] !== 'Successful'){
+            throw ValidationException::withMessages(['message' => 'Transaction was not completed, window closed']);
+        }
+
+        dd($decodedResult);
+
+        return response()->json([
+            'status' =>   $decodedResult['data']['status'] === 'success' ? 'success' : 'fail',
+           'data' => [
+               'reference' => $decodedResult['data']['reference'],
+               'amount' => $decodedResult ['data']['amount'],
+               'metadata' => $decodedResult['data']['metadata'],
+               'paid_at' => $decodedResult['data']['paid_at'],
+               'created_at' => $decodedResult['data']['created_at']
+           ]
+        ]);
+    }
+
+    public function handleGatewayWebHook(){
+        // Retrieve the request's body and parse it as JSON
+        $input = @file_get_contents("php://input");
+        $event = json_decode($input, true);
+        // Do something with $event
+        http_response_code(200); // PHP 5.4 or greater
+    }
 }

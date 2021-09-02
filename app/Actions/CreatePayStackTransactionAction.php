@@ -2,17 +2,21 @@
 namespace App\Actions;
 
 use App\Http\Requests\SchoolSetUpFormRequest;
+use Exception;
 
 class CreatePayStackTransactionAction {
     /**
      * @param SchoolSetUpFormRequest $request
      * @return array
+     * @throws Exception
      */
     public function execute(SchoolSetUpFormRequest $request)
     {
         $fields = [
             'email' => auth()->user()->email,
             'amount' => $request->amount * 100,
+            'reference' => generateReferenceCode(),
+            'callback_url' => config('auth.paystack.url.callback'),
             'metadata' => [
                 'school_name' => $request->school_name,
                 'school_address' => $request->school_address,
