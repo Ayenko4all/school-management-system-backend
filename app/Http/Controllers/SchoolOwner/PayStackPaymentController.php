@@ -41,7 +41,7 @@ class PayStackPaymentController extends RespondsWithHttpStatusController
      * @throws ValidationException
      */
     public function verify(Request $request){
-       dd($request->all());
+       //dd($request->all());
         $key = config('auth.paystack.api_key.sk_test');
         $url = config('auth.paystack.url.verify').$request->reference;
         $ch = curl_init();
@@ -56,8 +56,8 @@ class PayStackPaymentController extends RespondsWithHttpStatusController
         $result = curl_exec($ch);
 
         $decodedResult =json_decode($result, true);
-        
-        dd($decodedResult);
+
+       // dd($decodedResult);
 
         return response()->json([
             'status' =>   $decodedResult['data']['status'] === 'success' ? 'success' : 'fail',
