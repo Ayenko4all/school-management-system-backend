@@ -30,7 +30,7 @@ class VerifyTokenFormRequest extends FormRequest
             'type'      => ['required','string',
                 function ($attribute, $value, $fail) {
                     if (filled($value)) {
-                        $Types = collect([VerificationEnum::VERIFICATION,VerificationEnum::PASSWORD]);
+                        $Types = collect([VerificationEnum::Email,VerificationEnum::PASSWORD]);
                         if(! $Types->contains($value)){
                             $fail($attribute.' is not valid.');
                         }
