@@ -23,9 +23,9 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->middleware('json.response')->group(function (){
     // public routes
     Route::post('/login', LoginController::class)->name('login.api');
-    Route::post('/verify-token', EmailVerificationController::class)->name('verifyToken.api');
+    Route::post('/verify-email-token', EmailVerificationController::class)->name('verifyToken.api');
     Route::post('/request-email-token', SendEmailVerificationTokenController::class)->name('requestEmailToken.api');
-    Route::post('/request-password-token', ForgotPasswordController::class)->name('requestPasswordToken.api');
+    Route::post('/forget-password', ForgotPasswordController::class)->name('requestPasswordToken.api');
     Route::patch('/reset-password', ResetPasswordController::class)->name('resetPassword.api');
 
     Route::middleware('auth:sanctum')->group(function () {

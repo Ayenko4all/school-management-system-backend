@@ -41,9 +41,9 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            $this->mapSchoolownerApiRoutes();
+            $this->mapUserApiRoutes();
             $this->mapAuthenticationApiRoutes();
-            $this->mapSchoolApiRoutes();
+            $this->mapAdminApiRoutes();
             $this->mapWebRoutes();
         });
     }
@@ -53,12 +53,12 @@ class RouteServiceProvider extends ServiceProvider
      *
      * These routes are typically stateless.
      */
-    protected function mapSchoolownerApiRoutes()
+    protected function mapUserApiRoutes()
     {
         Route::prefix('api')
             ->middleware('api')
             ->namespace($this->namespace)
-            ->group(base_path('routes/api/siteowner.php'));
+            ->group(base_path('routes/api/user.php'));
     }
 
     protected function mapAuthenticationApiRoutes()
@@ -69,12 +69,12 @@ class RouteServiceProvider extends ServiceProvider
             ->group(base_path('routes/api/authentication.php'));
     }
 
-    protected function mapSchoolApiRoutes()
+    protected function mapAdminApiRoutes()
     {
         Route::prefix('api')
             ->middleware('api')
             ->namespace($this->namespace)
-            ->group(base_path('routes/api/school.php'));
+            ->group(base_path('routes/api/admin.php'));
     }
 
     protected function mapWebRoutes()
