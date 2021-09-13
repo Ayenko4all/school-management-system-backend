@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\SchoolOwner;
+namespace App\Http\Controllers\Admin;
 
 use App\Actions\CreatePayStackTransactionAction;
 use App\Http\Controllers\Controller;

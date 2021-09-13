@@ -1,34 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\SchoolOwner;
+namespace App\Http\Controllers\Admin;
 
-use App\Actions\CreatePayStackTransactionAction;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\RespondsWithHttpStatusController;
+use App\Http\Requests\SchoolOwnerFormRequest;
 use App\Http\Requests\SchoolSetUpFormRequest;
-use App\Http\Resources\SchoolResource;
-use App\Models\School;
-use App\Models\User;
+use App\Models\SchoolOwner;
 use Illuminate\Http\Request;
-use App\Actions\CreateOwnerAction;
 
-class SchoolController extends RespondsWithHttpStatusController
+
+class AdminTeacherController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $schools = School::with(['user','school_type','directors'])->latest()->paginate(10);
-        //dd($schools);
-       // $this->authorize('view', $schools);
-
-        return  $this->respond([
-            'schools' => SchoolResource::collection($schools)->response()->getData(true)
-        ]);
+        //
     }
 
     /**
@@ -43,28 +33,25 @@ class SchoolController extends RespondsWithHttpStatusController
 
     /**
      * Store a newly created resource in storage.
+     *
+     *
+     * @param Request $request
+     * @return void
      */
-    public function store()
+    public function store(Request $request)
     {
-        //
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param School $school
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function show(School $school)
+    public function show($id)
     {
-        $this->authorize('view', $school);
-
-        $school->load(['user','school_type','directors']);
-
-        return  $this->respond([
-            'school' =>  new SchoolResource($school)
-        ]);
+        //
     }
 
     /**

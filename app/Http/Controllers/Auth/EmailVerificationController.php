@@ -5,17 +5,17 @@ namespace App\Http\Controllers\Auth;
 use App\Enums\VerificationEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\RespondsWithHttpStatusController;
-use App\Http\Requests\VerifyPasswordResetRequest;
+use App\Http\Requests\VerifyEmailRequest;
+use App\Http\Resources\UserResource;
 use App\Models\Token;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
-class ResetPasswordController extends RespondsWithHttpStatusController
+class EmailVerificationController extends RespondsWithHttpStatusController
 {
-    public function __invoke(VerifyPasswordResetRequest $request)
+    public function __invoke(VerifyEmailRequest $request)
     {
 
         $token = Token::where('token', $request->token)
@@ -23,14 +23,16 @@ class ResetPasswordController extends RespondsWithHttpStatusController
             ->where('type', $request->type)
             ->first();
 
-        if (! $token || Carbon::parse($token->created_at)->addMinutes(config('auth.passwords.users.token'))->isPast()) {
+        if (! $token || Carbon::parse($token->created_at)->addMinutes(config('auth.verification.email.expire'))->isPast()) {
             throw ValidationException::withMessages(['token' => 'Token is invalid or has expired']);
         }
 
-        User::where('email', $token->email)->update(['password' => Hash::make($request->password)]);
+        User::where('email', '=', $token->email)
+            ->where('email_verified_at', '=', null)
+            ->update(['email_verified_at' => now()]);
 
         $token->delete();
 
-        return $this->responseOk(['message' => 'Password was updated successfully.']);
+        return  $this->responseOk(['message' => 'Your email has been verified successfully']);
     }
 }

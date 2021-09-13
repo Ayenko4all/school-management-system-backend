@@ -94,10 +94,10 @@ return [
 
     'verification' => [
         'email' => [
-            'expire' => 30,
+            'expire' => 60,
         ],
         'telephone' => [
-            'expire' => 30,
+            'expire' => 60,
         ],
     ],
 

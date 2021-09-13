@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Role;
+use App\Models\User;
+use App\Rules\UserRoleRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RegistrationFormRequest extends FormRequest
 {
@@ -13,7 +17,7 @@ class RegistrationFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->user()->can('createUser', User::class);
     }
 
     /**
@@ -29,7 +33,8 @@ class RegistrationFormRequest extends FormRequest
             'email'         => ['required', 'email', 'unique:users,email'],
             'password'      => ['required', 'string', 'min:8', 'confirmed'],
             'telephone'     => ['required', 'string', 'numeric','unique:users'],
-            'gender'      => ['required','string',
+            'roles'         => ['required', 'array', new UserRoleRule($this->input('roles'))],
+            'gender'        => ['required','string',
                 function ($attribute, $value, $fail) {
                     if (filled($value)) {
                         $Types = collect(['male','female']);

@@ -17,6 +17,7 @@ use Illuminate\Validation\ValidationException;
 class SendEmailVerificationTokenController extends RespondsWithHttpStatusController
 {
     public function __invoke(Request $request){
+
         $request->validate([
             'email'   => ['required','email','exists:users,email'],
         ]);

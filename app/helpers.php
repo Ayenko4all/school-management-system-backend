@@ -29,3 +29,17 @@ if (! function_exists('generateReferenceCode')) {
 
     }
 }
+
+if (! function_exists('generateTempPassword')) {
+    /**
+     * Generate a user's referral code.
+     *
+     * @return string
+     * @throws Exception
+     */
+    function generateTempPassword()
+    {
+        return bin2hex(random_bytes(3));
+
+    }
+}

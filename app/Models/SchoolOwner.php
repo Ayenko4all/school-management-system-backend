@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Http\Controllers\SchoolOwner\SchoolController;
+use App\Http\Controllers\Admin\AdminStudentController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

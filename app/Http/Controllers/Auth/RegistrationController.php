@@ -19,22 +19,29 @@ use Illuminate\Support\Facades\Hash;
 class RegistrationController extends RespondsWithHttpStatusController
 {
     /**
-     *  @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function __invoke(RegistrationFormRequest $request)
     {
         Token::where('email', $request->email)->where('type', VerificationEnum::Email)->delete();
 
-         User::create([
+        $password = generateTempPassword();
+
+        //dd($password);
+
+        $user = User::create([
              'first_name'   => $request->first_name,
              'last_name'    => $request->last_name,
              'email'        => $request->email,
              'gender'       => $request->gender,
              'telephone'    => $request->telephone,
-             'password'     => Hash::make($request->password),
+             'password'     => Hash::make($password),
              'status'       => StatusEnum::ACTIVE
-        ])->assignRoleToUser([RoleEnum::USER]);
+        ]);
+
+        $user->roles()->sync($request->roles);
 
         $tokenData = Token::create([
             'token' =>  generateToken(),
@@ -42,10 +49,10 @@ class RegistrationController extends RespondsWithHttpStatusController
             'type' => VerificationEnum::Email
         ]);
 
-        \Notification::route('mail', $request->email)->notify(new SendEmailTokenNotification($tokenData->token));
+        $user->notify(new SendEmailTokenNotification($tokenData->token, $password));
 
         return  $this->responseOk([
-            'message' => 'Registration successful, Please check your email for a verification code',
+            'message' => 'Registration successful, An email has been sent to the user',
         ]);
 
     }

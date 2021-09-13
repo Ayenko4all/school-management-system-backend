@@ -17,10 +17,7 @@ class UserSeeder extends Seeder
     {
         User::factory()->count(5)->create();
         User::factory()->create([
-            'email' => 'siteOwner@gmail.com'
-        ])->assignRoleToUser([RoleEnum::SITEADMIN]);
-        User::factory()->create([
-            'email' => 'schoolOwner@gmail.com'
-        ])->assignRoleToUser([RoleEnum::SCHOOLOWNER]);
+            'email' => 'admin@gmail.com'
+        ])->assignRoleToUser([RoleEnum::ADMIN]);
     }
 }

@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\RespondsWithHttpStatusController;
 use Illuminate\Http\Request;
-use Laravel\Passport\Token;
+use Laravel\Sanctum\Sanctum;
+use App\Models\PersonalAccessToken;
 
 class LogoutController extends RespondsWithHttpStatusController
 {

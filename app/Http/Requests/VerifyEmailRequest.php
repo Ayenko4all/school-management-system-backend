@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Enums\VerificationEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
-class VerifyTokenFormRequest extends FormRequest
+class VerifyEmailRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,13 +29,10 @@ class VerifyTokenFormRequest extends FormRequest
             'token'     => ['required', 'digits:6', 'exists:tokens,token'],
             'type'      => ['required','string',
                 function ($attribute, $value, $fail) {
-                    if (filled($value)) {
-                        $Types = collect([VerificationEnum::Email,VerificationEnum::PASSWORD]);
-                        if(! $Types->contains($value)){
-                            $fail($attribute.' is not valid.');
-                        }
+                    if ($value !== VerificationEnum::Email) {
+                        $fail($attribute.' is not valid.');
                     }
-                },],
+                },]
         ];
     }
 }

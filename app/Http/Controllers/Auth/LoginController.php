@@ -48,8 +48,8 @@ class LoginController extends RespondsWithHttpStatusController
         $user->tokens()->update(['expires_in' =>  $token->accessToken->created_at->addMinute(config('sanctum.expiration'))]);
 
         return  $this->respond([
-            'user'              => new UserResource($user),
-            'token'             => $token->plainTextToken,
+            'user'         => new UserResource($user->load(['roles'])),
+            'token'        => $token->plainTextToken,
             'expires_in'   => now()->parse($token->accessToken->created_at)->diffInSeconds($user->expiration($token->accessToken->id))
         ]);
     }

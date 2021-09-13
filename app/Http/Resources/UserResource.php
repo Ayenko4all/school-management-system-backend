@@ -29,6 +29,7 @@ class UserResource extends JsonResource
             'telephone_verified_at' => $this->telephone_verified_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'roles' => RoleResource::collection($this->whenLoaded('roles')),
         ];
     }
 }
