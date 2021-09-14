@@ -1,5 +1,7 @@
 <?php
 use App\Models\Token;
+use Spatie\Sluggable\SlugOptions;
+
 if (! function_exists('generateToken')) {
     /**
      * Generate a unique token for a user.
@@ -41,5 +43,13 @@ if (! function_exists('generateTempPassword')) {
     {
         return bin2hex(random_bytes(3));
 
+    }
+}
+
+if(! function_exists('generateSlugName')){
+    function generateSlugName(){
+       return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug');
     }
 }

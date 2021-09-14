@@ -4,14 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\RespondsWithHttpStatusController;
-use App\Http\Resources\ClassroomResource;
-use App\Models\Classroom;
+use App\Http\Requests\CreateStudentRequest;
+use App\Http\Resources\SubjectResource;
+use App\Models\Subject;
 use App\Models\User;
+use App\Rules\createSubjectRule;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Validation\Rule;
 
-class AdminClassController extends RespondsWithHttpStatusController
+class AdminSubjectController extends RespondsWithHttpStatusController
 {
     /**
      * Display a listing of the resource.
@@ -21,38 +23,30 @@ class AdminClassController extends RespondsWithHttpStatusController
      */
     public function index()
     {
-        $classrooms = Classroom::query()
-            ->with(['subjects'])
-            ->withTrashed()
-            ->get();
+        $Subjects = Subject::query()
+                        ->with(['classroom'])
+                        ->withTrashed()
+                        ->get();
 
         return $this->respond([
-            'classrooms' =>  ClassroomResource::collection($classrooms)
+            'Subjects' =>  SubjectResource::collection($Subjects)
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateStudentRequest $request)
     {
         //dd($request->all());
-        $request->validate(
-            [
-                'name'  => ['required', 'string', 'unique:classrooms']
-            ],
-            [
-                '*.required' => 'The :attribute field is required',
-            ]
-        );
-
-        $classroom = Classroom::create([
-            'name'  =>  $request->input('name')
+        $Subject = Subject::create([
+            'name'  =>  $request->input('name'),
+            'classroom_id'  =>  $request->input('classroom')
         ]);
 
         return $this->responseCreated([
-            'classroom' => new ClassroomResource($classroom)
-        ], 'A classroom was created successfully');
+            'Subject' => new SubjectResource($Subject->load('classroom'))
+        ], 'A Subject was created successfully');
     }
 
     /**
@@ -63,11 +57,11 @@ class AdminClassController extends RespondsWithHttpStatusController
      */
     public function show($id)
     {
-        $classroom = Classroom::query()
+        $Subject = Subject::query()
                     ->where('id', $id)
                     ->firstOrFail();
         return $this->respond([
-            'classroom' =>  new ClassroomResource($classroom->load('subjects'))
+            'Subject' =>  new SubjectResource($Subject->load('classroom'))
         ]);
     }
 
@@ -93,7 +87,7 @@ class AdminClassController extends RespondsWithHttpStatusController
     {
         $request->validate(
             [
-                'name'  => ['required', 'string',Rule::unique('classrooms')->ignore($id)],
+                'name'  => ['required', 'string',Rule::unique('subjects')->ignore($id)],
                 'status'  => ['required', 'string']
             ],
             [
@@ -101,18 +95,18 @@ class AdminClassController extends RespondsWithHttpStatusController
             ]
         );
 
-        $classroom =  Classroom::query()
+        $Subject =  Subject::query()
                     ->where('id', $id)
                     ->firstOrFail();
 
-        $classroom->update([
+        $Subject->update([
             'name'      =>  $request->input('name'),
             'status'    =>  $request->input('status'),
         ]);
 
         return $this->respond([
-            'message' => 'A classroom was updated successfully',
-            'classroom' => new ClassroomResource($classroom)
+            'message' => 'A Subject was updated successfully',
+            'Subject' => new SubjectResource($Subject->load('classroom'))
         ]);
     }
 
@@ -124,16 +118,16 @@ class AdminClassController extends RespondsWithHttpStatusController
      */
     public function destroy($id)
     {
-        $classroom = Classroom::query()
+        $Subject = Subject::query()
             ->where('id', $id)
             ->withTrashed()
             ->firstOrFail();
 
-        $classroom->update(['status'    => 'inactive']);
+        $Subject->update(['status'    => 'inactive']);
 
-        $classroom->delete();
+        $Subject->delete();
 
-        return $this->responseOk(['message' => 'A classroom was deleted successfully']);
+        return $this->responseOk(['message' => 'A Subject was deleted successfully']);
     }
 
     /**
@@ -144,18 +138,18 @@ class AdminClassController extends RespondsWithHttpStatusController
      */
     public function restore($id)
     {
-        $classroom = Classroom::query()
+        $Subject = Subject::query()
             ->where('id', $id)
             ->withTrashed()
             ->firstOrFail();
 
-        $classroom->update(['status'    => 'active']);
+        $Subject->update(['status'    => 'active']);
 
-        $classroom->restore();
+        $Subject->restore();
 
         return $this->respond([
-            'message' => 'A classroom was restore successfully',
-            'classroom' => new ClassroomResource($classroom)
+            'message' => 'A Subject was restore successfully',
+            'Subject' => new SubjectResource($Subject)
         ]);
     }
 }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-class Classroom extends Model
+class Subject extends Model
 {
     use HasFactory;
     use softDeletes;
@@ -22,6 +22,7 @@ class Classroom extends Model
      */
     protected $fillable = [
         'name',
+        'classroom_id',
         'slug',
         'status'
     ];
@@ -44,7 +45,7 @@ class Classroom extends Model
         return 'slug';
     }
 
-    public function subjects(){
-        return $this->hasMany(Subject::class);
+    public function classroom(){
+        return $this->hasOne(Classroom::class, 'id', 'classroom_id');
     }
 }
