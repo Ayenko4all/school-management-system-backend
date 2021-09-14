@@ -17,19 +17,29 @@ class CreateTeachersTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('martial_status');
-            $table->string('photo');
             $table->string('educational_level');
-            $table->string('certificate');
+            $table->string('tertiary_certificate')->nullable();
             $table->string('tertiary_institution')->nullable();
             $table->string('graduating_date');
-            $table->string('primary_school_certificate')->nullable();
-            $table->string('secondary_school_certificate')->nullable();
-            $table->string('others')->nullable();
+            $table->string('primary_school')->nullable();
+            $table->string('primary_certificate')->nullable();
+            $table->string('secondary_school')->nullable();
+            $table->string('secondary_certificate')->nullable();
+            $table->string('others_institution')->nullable();
+            $table->string('others_certificate')->nullable();
+            $table->string('identity_card')->nullable();
+            $table->string('identity_card_photo')->nullable();
             $table->string('guarantor_one');
             $table->string('guarantor_two')->nullable();
+            $table->string('country');
+            $table->string('state');
+            $table->string('lga');
+            $table->string('address');
+            $table->string('status')->default('inactive');
             $table->softDeletes();
             $table->timestamps();
         });
+
     }
 
     /**

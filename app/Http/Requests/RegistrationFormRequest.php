@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Rules\UserPermissionRule;
 use App\Rules\UserRoleRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -34,6 +35,7 @@ class RegistrationFormRequest extends FormRequest
             'password'      => ['required', 'string', 'min:8', 'confirmed'],
             'telephone'     => ['required', 'string', 'numeric','unique:users'],
             'roles'         => ['required', 'array', new UserRoleRule($this->input('roles'))],
+            //'permissions'    => ['required', 'array', new UserPermissionRule($this->input('permissions'))],
             'gender'        => ['required','string',
                 function ($attribute, $value, $fail) {
                     if (filled($value)) {

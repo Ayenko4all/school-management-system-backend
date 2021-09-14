@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminSubjectController;
 use App\Http\Controllers\Admin\PayStackPaymentController;
 use App\Http\Controllers\Admin\AdminClassController;
 use App\Http\Controllers\Admin\AdminTeacherController;
+use App\Http\Controllers\Auth\RegistrationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +20,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1/admin')->middleware(['json.response'])->group(function (){
 
     Route::middleware(['role:admin','auth:sanctum'])->group(function (){
+
+        Route::post('/create-user', RegistrationController::class)->name('create.user.api');
 
         Route::prefix('/class')->group(function (){
             Route::get('/', [AdminClassController::class, 'index'])->name('index.classroom.api');

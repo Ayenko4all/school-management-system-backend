@@ -48,4 +48,8 @@ class Subject extends Model
     public function classroom(){
         return $this->hasOne(Classroom::class, 'id', 'classroom_id');
     }
+
+    public function teachers(){
+        return $this->belongsToMany(Classroom::class, 'subject_teacher');
+    }
 }

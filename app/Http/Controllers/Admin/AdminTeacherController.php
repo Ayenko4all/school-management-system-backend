@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SchoolOwnerFormRequest;
 use App\Http\Requests\SchoolSetUpFormRequest;
+use App\Http\Resources\TeacherResource;
 use App\Models\SchoolOwner;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 
 
@@ -18,17 +20,14 @@ class AdminTeacherController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $teachers = Teacher::query()
+            ->with(['classrooms', 'students', 'subjects', 'roles'])
+            ->withTrashed()
+            ->get();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $this->respond([
+            'teachers' =>  TeacherResource::collection($teachers)
+        ]);
     }
 
     /**

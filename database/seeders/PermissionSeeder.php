@@ -20,5 +20,12 @@ class PermissionSeeder extends Seeder
         foreach ($permissions as $key => $permission) {
             Permission::create(['name'=> $permission]);
         }
+        $name = [
+            'update-teacher','create-teacher','view-teacher',
+            'update-student','create-student','view-student',
+        ];
+        foreach ($name as $key => $permission) {
+            Permission::create(['name'=> $permission]);
+        }
     }
 }

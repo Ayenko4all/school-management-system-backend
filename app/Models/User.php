@@ -65,14 +65,15 @@ class User extends Authenticatable
         return self::where('email', $param)->first()->createToken(config('auth.token.name'));
     }
 
-    public function schools(){
-        return $this->belongsToMany(School::class);
+    public function teacher(){
+        return $this->hasOne(Teacher::class, 'id', 'teacher_id');
     }
 
     public function expiration($token){
         $expiration = $this->tokens()->where('id', $token)->select(['expires_in'])->first();
         return $expiration->expires_in;
     }
+
 
 
 }

@@ -23,5 +23,7 @@ class RoleSeeder extends Seeder
         }
 
         Role::findByName(RoleEnum::ADMIN)->givePermissionTo(Permission::all());
+        Role::findByName(RoleEnum::TEACHER)->syncPermissions([5,6,7]);
+        Role::findByName(RoleEnum::STUDENT)->syncPermissions([8,9,10]);
     }
 }
