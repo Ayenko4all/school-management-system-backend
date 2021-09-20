@@ -8,7 +8,7 @@ use App\Http\Controllers\RespondsWithHttpStatusController;
 use App\Http\Resources\UserResource;
 use App\Models\Token;
 use App\Models\User;
-use App\Notifications\SendEmailTokenNotification;
+use App\Notifications\ResendEmailNotificationToken;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -29,7 +29,7 @@ class SendEmailVerificationTokenController extends RespondsWithHttpStatusControl
         $user = User::where('email', $request->email)->first();
 
         if ($user->email_verified_at != null) {
-            throw ValidationException::withMessages(['email' => 'You have already verify your email']);
+            throw ValidationException::withMessages(['email' => 'Your email has already been verified.']);
         }
 
         $tokenData = Token::create(
@@ -40,8 +40,8 @@ class SendEmailVerificationTokenController extends RespondsWithHttpStatusControl
             ]
         );
 
-        \Notification::route('mail', $request->email)->notify(new SendEmailTokenNotification($tokenData->token));
+        \Notification::route('mail', $request->email)->notify(new ResendEmailNotificationToken($tokenData->token));
 
-        return $this->responseOk(['message' => 'Please check your email for a verification code']);
+        return $this->responseOk(['message' => 'Please check your email for an email verification code.']);
     }
 }

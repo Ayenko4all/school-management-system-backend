@@ -20,7 +20,7 @@ class ResetPasswordController extends RespondsWithHttpStatusController
 
         $token = Token::where('token', $request->token)
             ->where('verified', false)
-            ->where('type', $request->type)
+            ->where('type', 'password')
             ->first();
 
         if (! $token || Carbon::parse($token->created_at)->addMinutes(config('auth.passwords.users.token'))->isPast()) {

@@ -26,13 +26,7 @@ class VerifyPasswordResetRequest extends FormRequest
     {
         return [
             'password'  => ['required', 'string', 'min:8', 'confirmed'],
-            'token'     =>  ['required', 'digits:6', 'exists:tokens,token'],
-            'type'      => ['required','string',
-                function ($attribute, $value, $fail) {
-                    if ($value !== VerificationEnum::PASSWORD) {
-                        $fail($attribute.' is not valid.');
-                    }
-                },]
+            'token'     =>  ['required', 'digits:6', 'exists:tokens,token']
         ];
     }
 }

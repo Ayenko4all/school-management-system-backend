@@ -1,11 +1,11 @@
 {
     "name": "laravel/laravel",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "Visual School.",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^7.4|^8.0",
         "ext-curl": "*",
         "ext-json": "*",
         "fakerphp/faker": "^1.9.1",
@@ -17,6 +17,7 @@
         "laravel/passport": "^10.1",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
+        "spatie/data-transfer-object": "^2.8",
         "spatie/laravel-permission": "^4.0",
         "spatie/laravel-sluggable": "^2.6"
     },

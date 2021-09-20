@@ -43,7 +43,10 @@ class LoginController extends RespondsWithHttpStatusController
 
         $user->tokens()->delete();
 
-        $token = $user->createToken(config('auth.token.name'),['admin']);
+        foreach($user->roles as $key => $role){
+            $permission = ['abilities' => $role->permissions->pluck('name')];
+            $token = $user->createToken(config('auth.token.name'),[$permission]);
+        }
 
         $user->tokens()->update(['expires_in' =>  $token->accessToken->created_at->addMinute(config('sanctum.expiration'))]);
 

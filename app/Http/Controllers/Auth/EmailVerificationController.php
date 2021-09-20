@@ -20,7 +20,7 @@ class EmailVerificationController extends RespondsWithHttpStatusController
 
         $token = Token::where('token', $request->token)
             ->where('verified', false)
-            ->where('type', $request->type)
+            ->where('type', 'email')
             ->first();
 
         if (! $token || Carbon::parse($token->created_at)->addMinutes(config('auth.verification.email.expire'))->isPast()) {

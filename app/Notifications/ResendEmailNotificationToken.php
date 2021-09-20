@@ -8,23 +8,20 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Lang;
 
-class SendEmailTokenNotification extends Notification
+class ResendEmailNotificationToken extends Notification
 {
     use Queueable;
 
     public $token;
-    public $password;
 
     /**
      * Create a new notification instance.
      *@param $token
-     * @param $password
      * @return void
      */
-    public function __construct($token, $password)
+    public function __construct($token)
     {
         $this->token = $token;
-        $this->password = $password;
     }
 
     /**
@@ -51,8 +48,6 @@ class SendEmailTokenNotification extends Notification
             ->greeting(Lang::get('Welcome to V-school!'))
             ->line(Lang::get('Your e-mail verification token is **:token**. It expires in :count minutes.',
                 ['count' => config('auth.verification.email.expire'), 'token' => $this->token]))
-           ->line(Lang::get("Your temporary password is, {$this->password}"))
-            ->line(Lang::get('Please you are advise to change your temporary password by using the forgetPassword link on login page.'))
             ->line(Lang::get('If you did not request a verification token, no further action is required. Thank you.'));
     }
 

@@ -29,8 +29,6 @@ class RegistrationController extends RespondsWithHttpStatusController
 
         $password = generateTempPassword();
 
-        //dd($password);
-
         $user = User::create([
              'first_name'   => $request->first_name,
              'last_name'    => $request->last_name,
