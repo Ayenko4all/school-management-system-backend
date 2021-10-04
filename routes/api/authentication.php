@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::prefix('v1')->middleware(['cors','json.response'])->group(function (){
+Route::prefix('v1')->middleware(['json.response'])->group(function (){
     // public routes
     Route::post('/login', LoginController::class)->name('login.api');
     Route::post('/verify-email', EmailVerificationController::class)->name('verifyToken.api');
