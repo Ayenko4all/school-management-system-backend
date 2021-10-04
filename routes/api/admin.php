@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminSessionController;
 use App\Http\Controllers\Admin\AdminSubjectController;
+use App\Http\Controllers\Admin\AdminTermController;
 use App\Http\Controllers\Admin\PayStackPaymentController;
 use App\Http\Controllers\Admin\AdminClassController;
 use App\Http\Controllers\Admin\AdminTeacherController;
@@ -39,6 +41,24 @@ Route::prefix('v1/admin')->middleware(['json.response'])->group(function (){
             Route::patch('/{subject}', [AdminSubjectController::class, 'update'])->name('update.subject.api');
             Route::delete('/{subject}', [AdminSubjectController::class, 'destroy'])->name('destroy.subject.api');
             Route::patch('/{subject}/restore', [AdminSubjectController::class, 'restore'])->name('restore.subject.api');
+        });
+
+        Route::prefix('/session')->group(function (){
+            Route::get('/', [AdminSessionController::class, 'index'])->name('index.session.api');
+            Route::post('/', [AdminSessionController::class, 'store'])->name('store.session.api');
+            Route::get('/{session}', [AdminSessionController::class, 'show'])->name('show.session.api');
+            Route::patch('/{session}', [AdminSessionController::class, 'update'])->name('update.session.api');
+            Route::delete('/{session}', [AdminSessionController::class, 'destroy'])->name('destroy.session.api');
+            Route::patch('/{session}/restore', [AdminSessionController::class, 'restore'])->name('restore.session.api');
+        });
+
+        Route::prefix('/term')->group(function (){
+            Route::get('/', [AdminTermController::class, 'index'])->name('index.term.api');
+            Route::post('/', [AdminTermController::class, 'store'])->name('store.term.api');
+            Route::get('/{term}', [AdminTermController::class, 'show'])->name('show.term.api');
+            Route::patch('/{term}', [AdminTermController::class, 'update'])->name('update.term.api');
+            Route::delete('/{term}', [AdminTermController::class, 'destroy'])->name('destroy.term.api');
+            Route::patch('/{term}/restore', [AdminTermController::class, 'restore'])->name('restore.term.api');
         });
 
         Route::prefix('/paystack')->group(function (){
