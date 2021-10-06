@@ -23,8 +23,8 @@ class ResetPasswordController extends RespondsWithHttpStatusController
             ->where('type', 'password')
             ->first();
 
-        if (! $token || Carbon::parse($token->created_at)->addMinutes(config('auth.passwords.users.token'))->isPast()) {
-            throw ValidationException::withMessages(['token' => 'Token is invalid or has expired']);
+        if (Carbon::parse($token->created_at)->addMinutes(config('auth.passwords.users.token'))->isPast()) {
+            throw ValidationException::withMessages(['token' => 'Token has expired']);
         }
 
         User::where('email', $token->email)->update(['password' => Hash::make($request->password)]);

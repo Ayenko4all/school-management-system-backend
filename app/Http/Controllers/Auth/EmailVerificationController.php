@@ -23,8 +23,8 @@ class EmailVerificationController extends RespondsWithHttpStatusController
             ->where('type', 'email')
             ->first();
 
-        if (! $token || Carbon::parse($token->created_at)->addMinutes(config('auth.verification.email.expire'))->isPast()) {
-            throw ValidationException::withMessages(['token' => 'Token is invalid or has expired']);
+        if (Carbon::parse($token->created_at)->addMinutes(config('auth.verification.email.expire'))->isPast()) {
+            throw ValidationException::withMessages(['token' => 'Token has expired']);
         }
 
         User::where('email', '=', $token->email)
