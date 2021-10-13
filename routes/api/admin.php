@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminTermController;
 use App\Http\Controllers\Admin\PayStackPaymentController;
 use App\Http\Controllers\Admin\AdminClassController;
 use App\Http\Controllers\Admin\AdminTeacherController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Auth\RegistrationController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,7 +24,7 @@ Route::prefix('v1/admin')->middleware(['json.response'])->group(function (){
 
     Route::middleware(['role:admin','auth:sanctum'])->group(function (){
 
-        Route::post('/create-user', RegistrationController::class)->name('create.user.api');
+        Route::post('/create-user', RegistrationController::class)->name('create.user');
 
         Route::prefix('/class')->group(function (){
             Route::get('/', [AdminClassController::class, 'index'])->name('index.classroom.api');
@@ -43,13 +44,13 @@ Route::prefix('v1/admin')->middleware(['json.response'])->group(function (){
             Route::patch('/{subject}/restore', [AdminSubjectController::class, 'restore'])->name('restore.subject.api');
         });
 
-        Route::prefix('/session')->group(function (){
-            Route::get('/', [AdminSessionController::class, 'index'])->name('index.session.api');
-            Route::post('/', [AdminSessionController::class, 'store'])->name('store.session.api');
-            Route::get('/{session}', [AdminSessionController::class, 'show'])->name('show.session.api');
-            Route::patch('/{session}', [AdminSessionController::class, 'update'])->name('update.session.api');
-            Route::delete('/{session}', [AdminSessionController::class, 'destroy'])->name('destroy.session.api');
-            Route::patch('/{session}/restore', [AdminSessionController::class, 'restore'])->name('restore.session.api');
+        Route::prefix('/sessions')->name('sessions.')->group(function (){
+            Route::get('/', [AdminSessionController::class, 'index'])->name('index');
+            Route::post('/', [AdminSessionController::class, 'store'])->name('store');
+            Route::get('/{session}', [AdminSessionController::class, 'show'])->name('show');
+            Route::patch('/{session}', [AdminSessionController::class, 'update'])->name('update');
+            Route::delete('/{session}', [AdminSessionController::class, 'destroy'])->name('destroy');
+            Route::patch('/{session}/restore', [AdminSessionController::class, 'restore'])->name('restore');
         });
 
         Route::prefix('/term')->group(function (){
@@ -64,6 +65,15 @@ Route::prefix('v1/admin')->middleware(['json.response'])->group(function (){
         Route::prefix('/paystack')->group(function (){
             Route::post('pay', [PayStackPaymentController::class, 'pay'])->name('paystack.pay.api');
             Route::get('verify', [PayStackPaymentController::class, 'verify'])->name('paystack.verify.api');
+        });
+
+        Route::prefix('/roles')->name('roles.')->group(function (){
+            Route::get('/', [RoleController::class, 'index'])->name('index');
+            Route::post('/', [RoleController::class, 'store'])->name('store');
+            Route::get('/{role}', [RoleController::class, 'show'])->name('show');
+            Route::patch('/{role}', [RoleController::class, 'update'])->name('update');
+            Route::delete('/{role}', [RoleController::class, 'destroy'])->name('destroy');
+            Route::patch('/{role}/restore', [RoleController::class, 'restore'])->name('restore');
         });
 
     });

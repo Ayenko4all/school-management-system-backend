@@ -39,7 +39,7 @@ class RegistrationController extends RespondsWithHttpStatusController
              'status'       => StatusEnum::ACTIVE
         ]);
 
-        $user->roles()->sync($request->roles);
+        $user->assignRole($request->input('roles'));
 
         $tokenData = Token::create([
             'token' =>  generateToken(),

@@ -57,9 +57,12 @@ class AdminSessionController extends RespondsWithHttpStatusController
      *
      * @param Session $session
      * @return JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(Session $session)
     {
+        $this->authorize('view', $session);
+
         return $this->respond(['session' => new SessionResource($session->load(['classrooms','terms']))]);
     }
 
@@ -91,9 +94,12 @@ class AdminSessionController extends RespondsWithHttpStatusController
      *
      * @param Session $session
      * @return JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function destroy(Session $session)
     {
+        $this->authorize('restore', $session);
+
         $session->update(['status'  => 'inactive']);
 
         $session->delete();
@@ -115,9 +121,7 @@ class AdminSessionController extends RespondsWithHttpStatusController
             ->withTrashed()
             ->firstOrFail();
 
-        if ($session->deleted_at == null){
-            throw ValidationException::withMessages(['message' => 'session is already restore and active']);
-        }
+        $this->authorize('restore', $session);
 
         $session->restore();
 
