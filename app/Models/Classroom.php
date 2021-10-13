@@ -15,15 +15,10 @@ class Classroom extends Model
     use HasSlug;
 
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name',
-        'slug',
-        'status'
+    protected $guarded = [];
+
+    protected $casts = [
+        'status' => 'boolean'
     ];
 
     /**
@@ -50,5 +45,9 @@ class Classroom extends Model
 
     public function teachers(){
         return $this->belongsToMany(Teacher::class, 'classroom_teacher');
+    }
+
+    public function session(){
+        return $this->hasOne(Session::class, 'id', 'session_id');
     }
 }

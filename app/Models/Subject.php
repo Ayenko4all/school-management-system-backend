@@ -15,16 +15,10 @@ class Subject extends Model
     use HasSlug;
 
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name',
-        'classroom_id',
-        'slug',
-        'status'
+    protected $guarded = [];
+
+    protected $casts = [
+        'status' => 'boolean'
     ];
 
     /**
