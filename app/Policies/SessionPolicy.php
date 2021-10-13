@@ -73,10 +73,6 @@ class SessionPolicy
      */
     public function delete(User $user, Session $session)
     {
-        if(! $session->deleted_at){
-            return Response::allow();
-        }
-
         if ($user->hasRole(RoleEnum::ADMIN)){
             return Response::allow();
         }
@@ -93,10 +89,6 @@ class SessionPolicy
      */
     public function restore(User $user, Session $session)
     {
-        if($session->deleted_at){
-            return Response::allow();
-        }
-
         if ($user->hasRole(RoleEnum::ADMIN)){
             return Response::allow();
         }
