@@ -1,5 +1,9 @@
 <?php
+
+use App\Enums\RoleEnum;
 use App\Models\Token;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Sluggable\SlugOptions;
 
 if (! function_exists('generateToken')) {
@@ -51,5 +55,33 @@ if(! function_exists('generateSlugName')){
        return SlugOptions::create()
             ->generateSlugsFrom('name')
             ->saveSlugsTo('slug');
+    }
+}
+
+if(! function_exists('generateDuration')){
+  function generateDuration($start_date, $end_date): int
+  {
+      $start = Carbon::parse($end_date);
+      $end = Carbon::parse($start_date);
+      return $end->diffInMonths($start);
+  }
+}
+
+if (! function_exists('defaultRoleNames')) {
+    function defaultRoleNames(): string
+    {
+        if (Cache::has('roleNamesForMiddleware')) {
+            return Cache::get('roleNamesForMiddleware');
+        }
+
+        $roles = app(RoleEnum::class)->getConstants();
+
+        if (($key = array_search(RoleEnum::USER, $roles, true)) !== false) {
+            unset($roles[$key]);
+        }
+
+        Cache::put('roleNamesForMiddleware', implode("|",$roles), now()->addDay());
+
+        return Cache::get('roleNamesForMiddleware');
     }
 }

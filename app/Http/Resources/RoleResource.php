@@ -18,8 +18,9 @@ class RoleResource extends JsonResource
             'id'             => $this->id,
             'name'           => $this->name,
             'description'    => $this->description,
-            'guard_name'     => $this->guard_name,
             'can_be_renamed' => $this->can_be_renamed,
+            'deleted_at' => $this->deleted_at,
+            'permissions'    =>  PermissionResource::collection($this->whenLoaded('permissions')),
         ];
     }
 }
