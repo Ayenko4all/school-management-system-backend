@@ -17,21 +17,7 @@ class User extends Authenticatable
 
     public $guard_name = '*';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'first_name',
-        'last_name',
-        'email',
-        'password',
-        'telephone',
-        'address',
-        'gender',
-        'status'
-    ];
+    protected $guarded = [];
 
     protected $dates = ['deleted_at'];
 
