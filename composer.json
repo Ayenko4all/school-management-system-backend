@@ -18,7 +18,9 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "spatie/data-transfer-object": "^2.8",
+        "spatie/laravel-json-api-paginate": "^1.10",
         "spatie/laravel-permission": "^4.0",
+        "spatie/laravel-query-builder": "^3.6",
         "spatie/laravel-sluggable": "^2.6"
     },
     "require-dev": {
