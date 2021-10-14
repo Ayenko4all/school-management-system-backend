@@ -31,7 +31,7 @@ class AdminClassController extends RespondsWithHttpStatusController
             ->appends($request->query());
 
         return $this->respond([
-            'classrooms' =>  ClassroomResource::collection($classrooms->response()->getData(true))
+            'classrooms' =>  ClassroomResource::collection($classrooms)->response()->getData(true)
         ]);
     }
 

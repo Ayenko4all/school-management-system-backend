@@ -33,7 +33,7 @@ class AdminSubjectController extends RespondsWithHttpStatusController
             ->appends($request->query());
 
         return $this->respond([
-            'Subjects' =>  SubjectResource::collection($Subjects->response()->getData(true))
+            'Subjects' =>  SubjectResource::collection($Subjects)->response()->getData(true)
         ]);
     }
 
