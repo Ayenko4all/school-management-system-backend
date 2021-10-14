@@ -2,26 +2,31 @@
 
 namespace App\Rules;
 
+use App\Models\Classroom;
 use App\Models\Subject;
 use Illuminate\Contracts\Validation\Rule;
 
-class createSubjectRule implements Rule
+class CreateClassroomRule implements Rule
 {
     /**
      * @var string
      */
     private $name;
-    private $classroom;
+
+    /**
+     * @var string
+     */
+    private $session;
 
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($name, $classroom)
+    public function __construct($name, $session)
     {
         $this->name = $name;
-        $this->classroom = $classroom;
+        $this->session = $session;
     }
 
     /**
@@ -33,9 +38,8 @@ class createSubjectRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        //dd($this->classroom);
-       return Subject::where('name', $this->name)
-            ->where('classroom_id',  $this->classroom)->doesntExist();
+       return Classroom::where('name', $this->name)
+            ->where('session_id',  $this->session)->doesntExist();
     }
 
     /**
@@ -45,6 +49,6 @@ class createSubjectRule implements Rule
      */
     public function message()
     {
-        return 'The :attribute already exists for the given classroom.';
+        return 'The :attribute already exists for the given session.';
     }
 }
