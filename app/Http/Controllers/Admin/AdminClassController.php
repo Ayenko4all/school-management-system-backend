@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\RespondsWithHttpStatusController;
+use App\Http\Requests\CreateClassroomRequest;
 use App\Http\Resources\ClassroomResource;
 use App\Models\Classroom;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Validation\Rule;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class AdminClassController extends RespondsWithHttpStatusController
 {
@@ -19,35 +21,28 @@ class AdminClassController extends RespondsWithHttpStatusController
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function index()
+    public function index(Request $request)
     {
-        $classrooms = Classroom::query()
-            ->with(['subjects'])
+        $classrooms = QueryBuilder::for(Classroom::class)
             ->withTrashed()
-            ->get();
+            ->defaultSort('-created_at')
+            ->allowedFilters(['name'])
+            ->jsonPaginate()
+            ->appends($request->query());
 
         return $this->respond([
-            'classrooms' =>  ClassroomResource::collection($classrooms)
+            'classrooms' =>  ClassroomResource::collection($classrooms->response()->getData(true))
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateClassroomRequest $request)
     {
-        //dd($request->all());
-        $request->validate(
-            [
-                'name'  => ['required', 'string', 'unique:classrooms']
-            ],
-            [
-                '*.required' => 'The :attribute field is required',
-            ]
-        );
-
         $classroom = Classroom::create([
-            'name'  =>  $request->input('name')
+            'name'  =>  $request->input('name'),
+            'session_id'  =>  $request->input('session'),
         ]);
 
         return $this->responseCreated([
@@ -94,10 +89,11 @@ class AdminClassController extends RespondsWithHttpStatusController
         $request->validate(
             [
                 'name'  => ['required', 'string',Rule::unique('classrooms')->ignore($id)],
-                'status'  => ['required', 'string']
+                'session'  => ['required', 'exists:sessions', Rule::unique('classrooms')->ignore($id)],
             ],
             [
                 '*.required' => 'The :attribute field is required',
+                '*.exists' => 'The :attribute does not exist',
             ]
         );
 
@@ -107,7 +103,7 @@ class AdminClassController extends RespondsWithHttpStatusController
 
         $classroom->update([
             'name'      =>  $request->input('name'),
-            'status'    =>  $request->input('status'),
+            'session_id'  =>  $request->input('session_id')
         ]);
 
         return $this->respond([

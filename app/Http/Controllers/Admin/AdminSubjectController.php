@@ -4,14 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\RespondsWithHttpStatusController;
-use App\Http\Requests\CreateStudentRequest;
+use App\Http\Requests\CreateSubjectRequest;
 use App\Http\Resources\SubjectResource;
 use App\Models\Subject;
+use App\Models\Term;
 use App\Models\User;
-use App\Rules\createSubjectRule;
+use App\Rules\CreateClassroomRule;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Validation\Rule;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class AdminSubjectController extends RespondsWithHttpStatusController
 {
@@ -21,27 +23,32 @@ class AdminSubjectController extends RespondsWithHttpStatusController
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function index()
+    public function index(Request $request)
     {
-        $Subjects = Subject::query()
-                        ->with(['classroom'])
-                        ->withTrashed()
-                        ->get();
+        $Subjects = QueryBuilder::for(Subject::class)
+            ->withTrashed()
+            ->defaultSort('-created_at')
+            ->allowedFilters(['name'])
+            ->jsonPaginate()
+            ->appends($request->query());
 
         return $this->respond([
-            'Subjects' =>  SubjectResource::collection($Subjects)
+            'Subjects' =>  SubjectResource::collection($Subjects->response()->getData(true))
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CreateStudentRequest $request)
+    public function store(CreateSubjectRequest $request)
     {
-        //dd($request->all());
+        $term = Term::where('name', $request->input('term'))->pluck('id')->firstOrFail();
+
         $Subject = Subject::create([
-            'name'  =>  $request->input('name'),
-            'classroom_id'  =>  $request->input('classroom')
+            'name'  =>  strtolower($request->input('name')),
+            'classroom_id'  =>  $request->input('classroom'),
+            'term_id'  =>  $term,
+            'session_id'  =>  $request->input('session'),
         ]);
 
         return $this->responseCreated([
@@ -138,18 +145,18 @@ class AdminSubjectController extends RespondsWithHttpStatusController
      */
     public function restore($id)
     {
-        $Subject = Subject::query()
+        $subject = Subject::query()
             ->where('id', $id)
             ->withTrashed()
             ->firstOrFail();
 
-        $Subject->update(['status'    => 'active']);
+        $subject->update(['status'    => 'active']);
 
-        $Subject->restore();
+        $subject->restore();
 
         return $this->respond([
             'message' => 'A Subject was restore successfully',
-            'Subject' => new SubjectResource($Subject)
+            'Subject' => new SubjectResource($subject)
         ]);
     }
 }
