@@ -67,21 +67,27 @@ if(! function_exists('generateDuration')){
   }
 }
 
-if (! function_exists('defaultRoleNames')) {
-    function defaultRoleNames(): string
+if (! function_exists('defaultOptionNames')) {
+    function defaultOptionNames($optionsClass)
     {
-        if (Cache::has('roleNamesForMiddleware')) {
-            return Cache::get('roleNamesForMiddleware');
+        if (Cache::has('optionNames')) {
+            return Cache::get('optionNames');
         }
 
-        $roles = app(RoleEnum::class)->getConstants();
+        $options = app($optionsClass)->getConstants();
 
-        if (($key = array_search(RoleEnum::USER, $roles, true)) !== false) {
-            unset($roles[$key]);
+        $newOptionArray = [];
+
+        foreach($options as $key => $value){
+           array_push($newOptionArray, $key, true);
         }
 
-        Cache::put('roleNamesForMiddleware', implode("|",$roles), now()->addDay());
+//        if (($key = array_search(RoleEnum::USER, $roles, true)) !== false) {
+//            unset($roles[$key]);
+//        }
 
-        return Cache::get('roleNamesForMiddleware');
+        Cache::put('optionNames', $newOptionArray, now()->addDay());
+
+        return Cache::get('optionNames');
     }
 }
