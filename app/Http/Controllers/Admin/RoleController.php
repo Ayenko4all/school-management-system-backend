@@ -79,7 +79,7 @@ class RoleController extends RespondsWithHttpStatusController
      */
     public function update(Request $request, $id)
     {
-        //$this->authorize('update', Role::class);
+        $this->authorize('update', Role::class);
 
         $request->validate([
             'role' => ['required', Rule::unique('roles', 'name')->ignore($id)],
