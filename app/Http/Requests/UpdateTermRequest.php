@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Session;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,10 +25,11 @@ class UpdateTermRequest extends FormRequest
      */
     public function rules()
     {
+        $session = Session::select(['start_date','end_date','name'])->where('id', $this->input('session'))->first();
         return [
             'name' => ['required', 'string',Rule::unique('terms')->ignore($this->route('term'))],
-            'start_date' => ['required', 'date'],
-            'end_date' => ['required', 'date'],
+            'start_date' => ['required', 'date_format:Y-m-d', "after_or_equal:{$session->start_date}"],
+            'end_date' => ['required', 'date_format:Y-m-d', 'after:start_date', "before_or_equal:{$session->end_date}"],
             'session' => ['required', 'exists:sessions,id']
         ];
     }

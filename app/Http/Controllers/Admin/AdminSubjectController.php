@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\RespondsWithHttpStatusController;
 use App\Http\Requests\CreateSubjectRequest;
+use App\Http\Requests\UpdateSubjectRequest;
 use App\Http\Resources\SubjectResource;
 use App\Models\Subject;
 use App\Models\Term;
@@ -86,34 +87,27 @@ class AdminSubjectController extends RespondsWithHttpStatusController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param int $id
+     * @param UpdateSubjectRequest $request
+     * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, int $id)
+    public function update(UpdateSubjectRequest $request, $id)
     {
-        $request->validate(
-            [
-                'name'  => ['required', 'string',Rule::unique('subjects')->ignore($id)],
-                'status'  => ['required', 'string']
-            ],
-            [
-                '*.required' => 'The :attribute field is required',
-            ]
-        );
+        $subject = Subject::query()
+            ->where('id', $id)
+            ->firstOrFail();
 
-        $Subject =  Subject::query()
-                    ->where('id', $id)
-                    ->firstOrFail();
-
-        $Subject->update([
-            'name'      =>  $request->input('name'),
+        $subject->update([
+            'name'  =>  strtolower($request->input('name')),
+            'classroom_id'  =>  $request->input('classroom'),
+            'term_id'  =>  $request->input('term'),
+            'session_id'  =>  $request->input('session'),
             'status'    =>  $request->input('status'),
         ]);
 
         return $this->respond([
             'message' => 'A Subject was updated successfully',
-            'Subject' => new SubjectResource($Subject->load('classroom'))
+            'Subject' => new SubjectResource($subject->load('classroom'))
         ]);
     }
 

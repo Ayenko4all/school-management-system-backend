@@ -59,8 +59,12 @@ class AdminSessionController extends RespondsWithHttpStatusController
      * @return JsonResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function show(Session $session)
+    public function show($id)
     {
+        $session =  Session::query()
+            ->where('id', $id)
+            ->firstOrFail();
+
         $this->authorize('view', $session);
 
         return $this->respond(['session' => new SessionResource($session->load(['classrooms','terms']))]);
@@ -71,11 +75,15 @@ class AdminSessionController extends RespondsWithHttpStatusController
      * Update the specified resource in storage.
      *
      * @param UpdateSessionRequest $request
-     * @param Session $session
+     * @param $id
      * @return JsonResponse
      */
-    public function update(UpdateSessionRequest $request, Session $session)
+    public function update(UpdateSessionRequest $request, $id)
     {
+        $session =  Session::query()
+            ->where('id', $id)
+            ->firstOrFail();
+
         $session->update([
             'name' => $request->input('name'),
             'start_date' => $request->input('start_date'),
@@ -92,12 +100,16 @@ class AdminSessionController extends RespondsWithHttpStatusController
     /**
      * Remove the specified resource from storage.
      *
-     * @param Session $session
+     * @param $id
      * @return JsonResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function destroy(Session $session)
+    public function destroy($id)
     {
+        $session =  Session::query()
+            ->where('id', $id)
+            ->firstOrFail();
+
         $this->authorize('restore', $session);
 
         $session->update(['status'  => 'inactive']);

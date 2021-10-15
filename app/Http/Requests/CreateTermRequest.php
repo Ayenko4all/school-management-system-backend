@@ -35,7 +35,7 @@ class CreateTermRequest extends FormRequest
                     $fail("The selected term already exists for " .strtolower($session->name));
                 }
             }],
-            'start_date' => ['required', 'date_format:Y-m-d', "after_or_equal:{$session->start_date}", 'before_or_equal:today'],
+            'start_date' => ['required', 'date_format:Y-m-d', "after_or_equal:{$session->start_date}", 'equal:today'],
             'end_date' => ['required', 'date_format:Y-m-d', 'after:start_date', "before_or_equal:{$session->end_date}", ''],
             'session' => ['required', 'exists:sessions,id']
         ];

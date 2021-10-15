@@ -29,9 +29,8 @@ class UpdateSessionRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string',Rule::unique('sessions')->ignore($this->route('session'))],
-            'duration' => ['required', 'string'],
-            'start_date' => ['required', 'date'],
-            'end_date' => ['required', 'date'],
+            'start_date' => ['required', 'date', 'date_format:Y-m-d'],
+            'end_date' => ['required','date', 'date_format:Y-m-d', 'after:start_date'],
         ];
     }
 

@@ -58,8 +58,12 @@ class RoleController extends RespondsWithHttpStatusController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Role $role)
+    public function show($id)
     {
+        $role =  Role::query()
+            ->where('id', $id)
+            ->firstOrFail();
+
         $this->authorize('view', $role);
 
         return $this->respond(['role' => new RoleResource($role->load('permissions'))]);
@@ -69,24 +73,25 @@ class RoleController extends RespondsWithHttpStatusController
      * store the specified resource.
      *
      * @param Request $request
-     * @param Role $role
-     *
+     * @param $id
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(Request $request, Role $role)
+    public function update(Request $request, $id)
     {
-        $this->authorize('update', Role::class);
+        //$this->authorize('update', Role::class);
 
         $request->validate([
-            'role' => ['required', Rule::unique('roles', 'name')->ignore($role->id)],
+            'role' => ['required', Rule::unique('roles', 'name')->ignore($id)],
         ], [
             '*.unique' => 'The provided :attribute already exists.'
         ]);
 
-        $role->update([
-            'name' => $request->input('role'),
-        ]);
+        $role =  Role::query()
+            ->where('id', $id)
+            ->firstOrFail();
+
+        $role->update(['name' => $request->input('role')]);
 
         return $this->respond(['role' => new RoleResource($role->load('permissions'))]);
     }
@@ -94,12 +99,16 @@ class RoleController extends RespondsWithHttpStatusController
     /**
      * Remove the specified resource from storage.
      *
-     * @param Role $role
+     * @param $id
      * @return JsonResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function destroy(Role $role)
+    public function destroy($id)
     {
+        $role =  Role::query()
+            ->where('id', $id)
+            ->firstOrFail();
+
         $this->authorize('delete', $role);
 
         $role->delete();
