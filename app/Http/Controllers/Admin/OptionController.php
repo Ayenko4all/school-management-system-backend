@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\RespondsWithHttpStatusController;
 use App\Models\Term;
+use App\Options\DefaultRole;
 use App\Options\TermOption;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,5 +24,17 @@ class OptionController extends RespondsWithHttpStatusController
         $terms =  defaultOptionNames(TermOption::class);
 
         return $this->respond(['termOptions' => $terms]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return JsonResponse
+     */
+    public function roles()
+    {
+        $roles =  defaultOptionNames(DefaultRole::class);
+
+        return $this->respond(['rolesOptions' => $roles]);
     }
 }

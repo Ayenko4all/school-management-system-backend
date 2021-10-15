@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\OptionController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Auth\LoginController;
@@ -30,8 +31,13 @@ Route::prefix('v1')->middleware(['json.response'])->group(function (){
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/logout', LogoutController::class)->name('logout.api');
-    });
 
+        Route::prefix('/options')->name('options.')->group(function (){
+            Route::get('terms', [OptionController::class, 'terms'])->name('terms');
+
+            Route::get('roles', [OptionController::class, 'roles'])->name('rolesOptions');
+        });
+    });
 
 });
 

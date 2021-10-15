@@ -2,6 +2,8 @@
 
 use App\Enums\RoleEnum;
 use App\Models\Token;
+use App\Options\DefaultRole;
+use App\Options\TermOption;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Spatie\Sluggable\SlugOptions;
@@ -70,24 +72,35 @@ if(! function_exists('generateDuration')){
 if (! function_exists('defaultOptionNames')) {
     function defaultOptionNames($optionsClass)
     {
-        if (Cache::has('optionNames')) {
-            return Cache::get('optionNames');
+        if ($optionsClass === TermOption::class && Cache::has('defaultTermNames')) {
+            return Cache::get('defaultTermNames');
+        }
+
+        if ($optionsClass === DefaultRole::class && Cache::has('defaultRoleName')) {
+            return Cache::get('defaultRoleName');
         }
 
         $options = app($optionsClass)->getConstants();
 
+        if (($key = array_search(DefaultRole::SUPERADMIN, $options, true)) !== false) {
+            unset($options[$key]);
+        }
+
         $newOptionArray = [];
 
         foreach($options as $key => $value){
-           array_push($newOptionArray, $key, true);
+           $newOptionArray[] = $value;
         }
 
-//        if (($key = array_search(RoleEnum::USER, $roles, true)) !== false) {
-//            unset($roles[$key]);
-//        }
+        if ($optionsClass === TermOption::class) {
+            Cache::put('defaultTermNames', $newOptionArray, now()->addDay());
+            return Cache::get('defaultTermNames');
+        }
 
-        Cache::put('optionNames', $newOptionArray, now()->addDay());
+        if ($optionsClass === DefaultRole::class) {
+            Cache::put('defaultRoleName', $newOptionArray, now()->addDay());
+            return Cache::get('defaultRoleName');
+        }
 
-        return Cache::get('optionNames');
     }
 }

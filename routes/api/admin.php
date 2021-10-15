@@ -77,10 +77,6 @@ Route::prefix('v1/admin')->middleware(['json.response'])->group(function (){
             Route::patch('/{role}/restore', [RoleController::class, 'restore'])->name('restore');
         });
 
-        Route::prefix('/options')->name('options.')->group(function (){
-            Route::get('terms', [OptionController::class, 'terms'])->name('terms');
-        });
-
     });
 
     Route::post('/payment/webhook', [PayStackPaymentController::class,'handleGatewayWebHook'])->name('paystack.webhook.api');
