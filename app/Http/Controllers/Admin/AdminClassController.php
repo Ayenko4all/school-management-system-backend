@@ -26,6 +26,7 @@ class AdminClassController extends RespondsWithHttpStatusController
         $classrooms = QueryBuilder::for(Classroom::class)
             ->withTrashed()
             ->defaultSort('-created_at')
+            ->allowedSorts(['name','status'])
             ->allowedFilters(['name'])
             ->jsonPaginate()
             ->appends($request->query());

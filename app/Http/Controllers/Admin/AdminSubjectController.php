@@ -29,6 +29,7 @@ class AdminSubjectController extends RespondsWithHttpStatusController
         $Subjects = QueryBuilder::for(Subject::class)
             ->withTrashed()
             ->defaultSort('-created_at')
+            ->allowedSorts(['name','status'])
             ->allowedFilters(['name'])
             ->jsonPaginate()
             ->appends($request->query());

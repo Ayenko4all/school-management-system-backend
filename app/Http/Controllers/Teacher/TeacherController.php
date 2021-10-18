@@ -63,7 +63,7 @@ class TeacherController extends RespondsWithHttpStatusController
     public function store(CreateTeacherRequest $request, CreateFileUpdateAction $createFileUpdateAction)
     {
         if (Teacher::where('user_id', auth()->id())->exists()) {
-            throw ValidationException::withMessages(['message' => 'User already exists.']);
+            throw ValidationException::withMessages(['message' => 'Student already exists.']);
         }
 
         $teacher = Teacher::create([

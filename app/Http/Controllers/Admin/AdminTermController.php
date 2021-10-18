@@ -29,6 +29,7 @@ class AdminTermController extends RespondsWithHttpStatusController
         $terms = QueryBuilder::for(Term::class)
             ->withTrashed()
             ->defaultSort('-created_at')
+            ->allowedSorts(['name','start_date','end_date','status'])
             ->allowedFilters(['name'])
             ->jsonPaginate()
             ->appends($request->query());

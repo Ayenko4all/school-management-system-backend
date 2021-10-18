@@ -25,6 +25,7 @@ class AdminSessionController extends RespondsWithHttpStatusController
     {
         $sessions = QueryBuilder::for(Session::class)
             ->defaultSort('-created_at')
+            ->allowedSorts(['name','start_date','end_date','status'])
             ->allowedFilters(['name'])
             ->jsonPaginate()
             ->appends($request->query());
