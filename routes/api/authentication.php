@@ -27,7 +27,7 @@ Route::prefix('v1')->middleware(['json.response'])->group(function (){
     Route::get('/', function () {
         return response()->json([
             'status' => 'success',
-            'data'   => ['message' => 'Welcome to the V School API'],
+            'data'   => ['message' => 'Welcome to the V-School API'],
         ]);
     })->name('index');
 
