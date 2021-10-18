@@ -23,6 +23,15 @@ use Illuminate\Support\Facades\Route;
 */
 Route::prefix('v1')->middleware(['json.response'])->group(function (){
     // public routes
+
+    Route::get('/', function () {
+        return response()->json([
+            'status' => 'success',
+            'data'   => ['message' => 'Welcome to the V School API'],
+        ]);
+    })->name('index');
+
+
     Route::post('/login', LoginController::class)->name('login.api');
     Route::post('/verify-email', EmailVerificationController::class)->name('verifyToken.api');
     Route::post('/request-email-token', SendEmailVerificationTokenController::class)->name('requestEmailToken.api');
