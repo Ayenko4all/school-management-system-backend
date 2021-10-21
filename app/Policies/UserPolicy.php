@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Enums\RoleEnum;
 use App\Models\User;
+use App\Options\DefaultRole;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
 
@@ -42,9 +43,9 @@ class UserPolicy
      */
     public function createUser(User $user)
     {
-        return $user->hasRole(RoleEnum::ADMIN)
+        return $user->hasRole(DefaultRole::ADMIN)
             ? Response::allow()
-            : Response::deny('You don not have authority to perform this action.');
+            : Response::deny();
     }
 
     /**

@@ -40,7 +40,7 @@ class Classroom extends Model
     }
 
     public function subjects(){
-        return $this->belongsToMany(Subject::class , 'subject_teacher');
+        return $this->belongsToMany(Subject::class, 'classroom_subject');
     }
 
     public function teachers(){

@@ -59,9 +59,10 @@ class AdminClassController extends RespondsWithHttpStatusController
      */
     public function show($id)
     {
-        $classroom = Classroom::query()
-                    ->where('id', $id)
-                    ->firstOrFail();
+        $classroom = QueryBuilder::for(Classroom::where('id', $id))
+            ->allowedIncludes(['subjects'])
+            ->firstOrFail();
+
         return $this->respond([
             'classroom' =>  new ClassroomResource($classroom->load('subjects'))
         ]);

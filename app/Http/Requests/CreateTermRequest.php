@@ -30,12 +30,12 @@ class CreateTermRequest extends FormRequest
         return [
             'name' => ['required', 'string', function ($value, $attribute, $fail) use ($session){
                 $terms = Term::where('name', $attribute)
-                ->where('session_id', $this->input('session'))->exists();
+                ->whereRelation('sessions', 'session_id', $this->input('session'))->exists();
                 if ($terms) {
                     $fail("The selected term already exists for " .strtolower($session->name));
                 }
             }],
-            'start_date' => ['required', 'date_format:Y-m-d', "after_or_equal:{$session->start_date}", 'equal:today'],
+            'start_date' => ['required', 'date_format:Y-m-d', "after_or_equal:{$session->start_date}"],
             'end_date' => ['required', 'date_format:Y-m-d', 'after:start_date', "before_or_equal:{$session->end_date}", ''],
             'session' => ['required', 'exists:sessions,id']
         ];

@@ -19,7 +19,11 @@ class Term extends Model
         'status' => 'boolean'
     ];
 
-    public function session(){
-        return $this->hasOne(Session::class, 'id', 'session_id');
+    public function sessions(){
+        return $this->belongsToMany(Session::class);
+    }
+
+    public function subjects(){
+        return $this->hasMany(Subject::class);
     }
 }

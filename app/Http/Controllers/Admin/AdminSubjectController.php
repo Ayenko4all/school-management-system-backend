@@ -46,15 +46,16 @@ class AdminSubjectController extends RespondsWithHttpStatusController
     {
         $term = Term::where('name', $request->input('term'))->pluck('id')->firstOrFail();
 
-        $Subject = Subject::create([
+        $subject = Subject::create([
             'name'  =>  strtolower($request->input('name')),
-            'classroom_id'  =>  $request->input('classroom'),
             'term_id'  =>  $term,
             'session_id'  =>  $request->input('session'),
         ]);
 
+        $subject->classrooms()->attach($request->input('classroom'));
+
         return $this->responseCreated([
-            'Subject' => new SubjectResource($Subject->load('classroom'))
+            'Subject' => new SubjectResource($subject->load(['classrooms','term','session']))
         ], 'A Subject was created successfully');
     }
 
@@ -66,11 +67,12 @@ class AdminSubjectController extends RespondsWithHttpStatusController
      */
     public function show($id)
     {
-        $Subject = Subject::query()
-                    ->where('id', $id)
-                    ->firstOrFail();
+        $Subject = QueryBuilder::for(Subject::where('id', $id))
+            ->allowedIncludes(['classrooms','term','session'])
+            ->firstOrFail();
+
         return $this->respond([
-            'Subject' =>  new SubjectResource($Subject->load('classroom'))
+            'Subject' =>  new SubjectResource($Subject)
         ]);
     }
 

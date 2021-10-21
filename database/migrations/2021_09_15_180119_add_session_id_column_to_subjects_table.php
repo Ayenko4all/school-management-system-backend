@@ -14,7 +14,7 @@ class AddSessionIdColumnToSubjectsTable extends Migration
     public function up()
     {
         Schema::table('subjects', function (Blueprint $table) {
-            $table->foreignId('session_id')->after('classroom_id')->constrained('sessions');
+            $table->foreignId('session_id')->after('name')->constrained('sessions');
         });
     }
 

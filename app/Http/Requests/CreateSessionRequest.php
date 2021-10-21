@@ -26,7 +26,7 @@ class CreateSessionRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'unique:sessions,name'],
-            'start_date' => ['required', 'date', 'date_format:Y-m-d', 'equal:today'],
+            'start_date' => ['required', 'date', 'date_format:Y-m-d', 'after_or_equal:today'],
             'end_date' => ['required','date', 'date_format:Y-m-d', 'after:start_date'],
         ];
     }

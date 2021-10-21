@@ -37,9 +37,8 @@ class RegistrationController extends RespondsWithHttpStatusController
              'telephone'    => $request->telephone,
              'password'     => Hash::make($password),
              'status'       => StatusEnum::ACTIVE
-        ]);
-
-        $user->assignRole($request->input('roles'));
+        ])
+            ->assignRole($request->input('roles'));
 
         $tokenData = Token::create([
             'token' =>  generateToken(),

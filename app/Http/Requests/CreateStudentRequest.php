@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\createSubjectRule;
+use App\Rules\CreateClassroomRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateStudentRequest extends FormRequest
@@ -25,9 +25,6 @@ class CreateStudentRequest extends FormRequest
     public function rules()
     {
         return [
-
-                'name'          => ['required', new CreateSubjectRule($this->input('name'), $this->input('classroom'))],
-                'classroom'     => ['required', 'integer', 'exists:classrooms,id'],
 
         ];
     }

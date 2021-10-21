@@ -59,11 +59,12 @@ class AdminTermController extends RespondsWithHttpStatusController
             'name' => $request->input('name'),
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
-            'session_id' => $request->input('session'),
         ]);
 
+        $term->sessions()->attach($request->input('session'));
+
         Return $this->responseCreated([
-            'term' =>  new TermResource($term->load('session'))
+            'term' =>  new TermResource($term)
         ], 'A term was created successfully.');
     }
 
@@ -75,7 +76,7 @@ class AdminTermController extends RespondsWithHttpStatusController
      */
     public function show(Term $term)
     {
-        return $this->respond(['term' => new TermResource($term->load('session'))]);
+        return $this->respond(['term' => new TermResource($term->load(['sessions','subjects']))]);
     }
 
     /**
@@ -96,7 +97,7 @@ class AdminTermController extends RespondsWithHttpStatusController
 
         return $this->respond([
             'message' => 'A term was updated successfully',
-            'term' => new TermResource($term->load('session'))
+            'term' => new TermResource($term->load('sessions'))
         ]);
     }
 

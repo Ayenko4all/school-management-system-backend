@@ -39,8 +39,16 @@ class Subject extends Model
         return 'slug';
     }
 
-    public function classroom(){
-        return $this->hasOne(Classroom::class, 'id', 'classroom_id');
+    public function classrooms(){
+        return $this->belongsToMany(Classroom::class, 'classroom_subject');
+    }
+
+    public function term(){
+        return $this->belongsTo(Term::class);
+    }
+
+    public function session(){
+        return $this->belongsTo(Session::class);
     }
 
     public function teachers(){

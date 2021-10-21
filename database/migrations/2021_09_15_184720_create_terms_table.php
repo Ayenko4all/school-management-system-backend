@@ -16,7 +16,6 @@ class CreateTermsTable extends Migration
         Schema::create('terms', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('session_id')->constrained('sessions');
             $table->string('start_date');
             $table->string('end_date');
             $table->string('status')->default('active');

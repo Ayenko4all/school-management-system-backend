@@ -26,7 +26,7 @@ class UpdateSubjectRequest extends FormRequest
      */
     public function rules(Subject $subject)
     {
-        $term = Term::where('id', $this->input('term'))->pluck('id')->firstOrFail();
+        $term = Term::where('id', $this->input('term'))->pluck('id')->first();
         return [
             'session' => ['required', 'exists:sessions,id'],
             'term' => ['required', 'exists:terms,id'],
@@ -36,7 +36,7 @@ class UpdateSubjectRequest extends FormRequest
                 function($value, $attribute, $fail) use($term, $subject){
                     $name = Subject::where('name', strtolower($attribute))
                         ->where('term_id', $term)
-                        ->where('classroom_id', $this->input('classroom'))->first();
+                        ->whereRelation('classrooms', 'classroom_id', $this->input('classroom'))->first();
                     if ($name) {
                         $fail("The selected subject already exists for the selected term and classroom");
                     }

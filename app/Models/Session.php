@@ -25,6 +25,6 @@ class Session extends Model
     }
 
     public function terms(){
-        return $this->hasMany(Term::class);
+        return $this->belongsToMany(Term::class);
     }
 }
