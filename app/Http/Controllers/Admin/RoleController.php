@@ -15,6 +15,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 class RoleController extends RespondsWithHttpStatusController
 {
     public function index(Request $request){
+
         $roles = QueryBuilder::for(Role::class)
             ->withTrashed()
             ->allowedSorts('name')

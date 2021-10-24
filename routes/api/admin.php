@@ -3,11 +3,15 @@
 use App\Http\Controllers\Admin\AdminSessionController;
 use App\Http\Controllers\Admin\AdminSubjectController;
 use App\Http\Controllers\Admin\AdminTermController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\OptionController;
 use App\Http\Controllers\Admin\PayStackPaymentController;
 use App\Http\Controllers\Admin\AdminClassController;
 use App\Http\Controllers\Admin\AdminTeacherController;
+use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserPermissionController;
+use App\Http\Controllers\Admin\UserRoleController;
 use App\Http\Controllers\Auth\RegistrationController;
 use Illuminate\Support\Facades\Route;
 
@@ -75,6 +79,23 @@ Route::prefix('v1/admin')->middleware(['json.response'])->group(function (){
             Route::patch('/{role}', [RoleController::class, 'update'])->name('update');
             Route::delete('/{role}', [RoleController::class, 'destroy'])->name('destroy');
             Route::patch('/{role}/restore', [RoleController::class, 'restore'])->name('restore');
+            Route::patch('/{user}/attach', [UserRoleController::class, 'attach'])->name('attach');
+            Route::delete('/{user}/detach', [UserRoleController::class, 'detach'])->name('detach');
+        });
+
+        Route::prefix('/permissions')->name('permissions.')->group(function (){
+            Route::get('/', [PermissionController::class, 'index'])->name('index');
+            Route::post('/', [PermissionController::class, 'store'])->name('store');
+            Route::get('/{permission}', [PermissionController::class, 'show'])->name('show');
+            Route::get('/{permission}/users', [PermissionController::class, 'users'])->name('users');
+            Route::get('/{permission}/roles', [PermissionController::class, 'roles'])->name('roles');
+            Route::patch('/{user}/attach', [UserPermissionController::class, 'attach'])->name('attach');
+            Route::delete('/{user}/detach', [UserPermissionController::class, 'detach'])->name('detach');
+        });
+
+        Route::prefix('/users')->name('users.')->group(function (){
+            Route::get('/', [AdminUserController::class, 'index'])->name('index');
+            Route::get('{user}', [AdminUserController::class, 'show'])->name('show');
         });
 
     });
