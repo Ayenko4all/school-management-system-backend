@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminSessionController;
 use App\Http\Controllers\Admin\AdminSubjectController;
 use App\Http\Controllers\Admin\AdminTermController;
@@ -30,6 +31,8 @@ Route::prefix('v1/admin')->middleware(['json.response'])->group(function (){
     Route::middleware(['role:admin','auth:sanctum'])->group(function (){
 
         Route::post('/create-user', RegistrationController::class)->name('create.user');
+
+        Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
         Route::prefix('/classrooms')->name('classrooms.')->group(function (){
             Route::get('/', [AdminClassController::class, 'index'])->name('index');
@@ -96,6 +99,13 @@ Route::prefix('v1/admin')->middleware(['json.response'])->group(function (){
         Route::prefix('/users')->name('users.')->group(function (){
             Route::get('/', [AdminUserController::class, 'index'])->name('index');
             Route::get('{user}', [AdminUserController::class, 'show'])->name('show');
+        });
+
+
+        Route::prefix('/options')->name('options.')->group(function (){
+            Route::get('roles', [OptionController::class, 'roles'])->name('roles');
+
+            Route::get('permissions', [OptionController::class, 'permissions'])->name('permission');
         });
 
     });

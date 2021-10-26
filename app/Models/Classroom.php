@@ -8,6 +8,31 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
+/**
+ * App\Models\Classroom.
+ *
+ * @property int                                                               $id
+ * @property string                                                            $name
+ * @property boolean                                                           $status
+ * @property null|\Illuminate\Support\Carbon                                   $created_at
+ * @property null|\Illuminate\Support\Carbon                                   $updated_at
+ * @property null|\Illuminate\Support\Carbon                                   $deleted_at
+ * @property \App\Models\Subject                                               $subjects
+ * @property \App\Models\Session                                               $session
+ * @property \App\Models\Teacher                                               $teachers
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|Classroom newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Classroom newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Classroom query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Classroom whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Classroom whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Classroom whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Classroom whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Classroom whereDeletedAt($value)
+ *
+ * * @mixin \Eloquent
+ */
+
 class Classroom extends Model
 {
     use HasFactory;

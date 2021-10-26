@@ -26,7 +26,7 @@ class AdminSubjectController extends RespondsWithHttpStatusController
      */
     public function index(Request $request)
     {
-        $Subjects = QueryBuilder::for(Subject::class)
+        $subjects = QueryBuilder::for(Subject::class)
             ->withTrashed()
             ->defaultSort('-created_at')
             ->allowedSorts(['name','status'])
@@ -35,7 +35,7 @@ class AdminSubjectController extends RespondsWithHttpStatusController
             ->appends($request->query());
 
         return $this->respond([
-            'Subjects' =>  SubjectResource::collection($Subjects)->response()->getData(true)
+            'Subjects' =>  SubjectResource::collection($subjects)->response()->getData(true)
         ]);
     }
 
@@ -67,12 +67,12 @@ class AdminSubjectController extends RespondsWithHttpStatusController
      */
     public function show($id)
     {
-        $Subject = QueryBuilder::for(Subject::where('id', $id))
+        $subject = QueryBuilder::for(Subject::where('id', $id))
             ->allowedIncludes(['classrooms','term','session'])
             ->firstOrFail();
 
         return $this->respond([
-            'Subject' =>  new SubjectResource($Subject)
+            'Subject' =>  new SubjectResource($subject)
         ]);
     }
 
@@ -96,8 +96,8 @@ class AdminSubjectController extends RespondsWithHttpStatusController
      */
     public function update(UpdateSubjectRequest $request, $id)
     {
-        $subject = Subject::query()
-            ->where('id', $id)
+        $subject = QueryBuilder::for(Subject::where('id', $id))
+            ->allowedIncludes(['classrooms','terms'])
             ->firstOrFail();
 
         $subject->update([
@@ -110,7 +110,7 @@ class AdminSubjectController extends RespondsWithHttpStatusController
 
         return $this->respond([
             'message' => 'A Subject was updated successfully',
-            'Subject' => new SubjectResource($subject->load('classroom'))
+            'Subject' => new SubjectResource($subject)
         ]);
     }
 

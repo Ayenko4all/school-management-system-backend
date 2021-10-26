@@ -30,7 +30,7 @@ class UpdateSubjectRequest extends FormRequest
         return [
             'session' => ['required', 'exists:sessions,id'],
             'term' => ['required', 'exists:terms,id'],
-            'status'  => ['required', 'string'],
+            'status'  => ['required', 'boolean'],
             'classroom' => ['required','exists:classrooms,id'],
             'name'  => ['required', 'string',
                 function($value, $attribute, $fail) use($term, $subject){

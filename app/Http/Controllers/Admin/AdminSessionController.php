@@ -56,19 +56,19 @@ class AdminSessionController extends RespondsWithHttpStatusController
     /**
      * Display the specified resource.
      *
-     * @param Session $session
+     * @param $id
      * @return JsonResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show($id)
     {
-        $session =  Session::query()
-            ->where('id', $id)
+        $session = QueryBuilder::for(Session::where('id', $id))
+            ->allowedIncludes(['classrooms','terms'])
             ->firstOrFail();
 
         $this->authorize('view', $session);
 
-        return $this->respond(['session' => new SessionResource($session->load(['classrooms','terms']))]);
+        return $this->respond(['session' => new SessionResource($session)]);
     }
 
 
@@ -81,8 +81,8 @@ class AdminSessionController extends RespondsWithHttpStatusController
      */
     public function update(UpdateSessionRequest $request, $id)
     {
-        $session =  Session::query()
-            ->where('id', $id)
+        $session = QueryBuilder::for(Session::where('id', $id))
+            ->allowedIncludes(['classrooms','terms'])
             ->firstOrFail();
 
         $session->update([
@@ -94,7 +94,7 @@ class AdminSessionController extends RespondsWithHttpStatusController
 
         return $this->respond([
             'message' => 'A Session was updated successfully',
-            'session' => new SessionResource($session->load(['classrooms','terms']))
+            'session' => new SessionResource($session)
         ]);
     }
 
@@ -107,8 +107,7 @@ class AdminSessionController extends RespondsWithHttpStatusController
      */
     public function destroy($id)
     {
-        $session =  Session::query()
-            ->where('id', $id)
+        $session = QueryBuilder::for(Session::where('id', $id))
             ->firstOrFail();
 
         $this->authorize('restore', $session);
@@ -129,8 +128,7 @@ class AdminSessionController extends RespondsWithHttpStatusController
      */
     public function restore($id)
     {
-        $session =  Session::query()
-            ->where('id', $id)
+        $session = QueryBuilder::for(Session::where('id', $id))
             ->withTrashed()
             ->firstOrFail();
 

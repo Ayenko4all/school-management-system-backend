@@ -50,6 +50,8 @@ class Role extends BaseRole
      */
     protected $appends = ['can_be_renamed'];
 
+    protected $hidden = ['can_be_renamed'];
+
     /**
      * Set the role's name.
      *

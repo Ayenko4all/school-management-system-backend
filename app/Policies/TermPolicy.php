@@ -69,7 +69,11 @@ class TermPolicy
      */
     public function delete(User $user, Term $term)
     {
-        //
+        if ($user->hasRole(RoleEnum::ADMIN)){
+            Response::allow();
+        }
+
+        return Response::deny();
     }
 
     /**
@@ -81,7 +85,15 @@ class TermPolicy
      */
     public function restore(User $user, Term $term)
     {
-        //
+        if ($term->deleted_at){
+            return Response::allow();
+        }
+
+        if ($user->hasRole(RoleEnum::ADMIN)){
+            Response::allow();
+        }
+
+        return Response::deny();
     }
 
     /**

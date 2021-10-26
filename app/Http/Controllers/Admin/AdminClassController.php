@@ -64,7 +64,7 @@ class AdminClassController extends RespondsWithHttpStatusController
             ->firstOrFail();
 
         return $this->respond([
-            'classroom' =>  new ClassroomResource($classroom->load('subjects'))
+            'classroom' =>  new ClassroomResource($classroom)
         ]);
     }
 
@@ -99,9 +99,9 @@ class AdminClassController extends RespondsWithHttpStatusController
             ]
         );
 
-        $classroom =  Classroom::query()
-                    ->where('id', $id)
-                    ->firstOrFail();
+        $classroom = QueryBuilder::for(Classroom::where('id', $id))
+            ->allowedIncludes(['subjects'])
+            ->firstOrFail();
 
         $classroom->update([
             'name'      =>  $request->input('name'),
@@ -122,8 +122,7 @@ class AdminClassController extends RespondsWithHttpStatusController
      */
     public function destroy($id)
     {
-        $classroom = Classroom::query()
-            ->where('id', $id)
+        $classroom = QueryBuilder::for(Classroom::where('id', $id))
             ->withTrashed()
             ->firstOrFail();
 

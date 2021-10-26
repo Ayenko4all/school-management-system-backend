@@ -76,7 +76,7 @@ class AdminTermController extends RespondsWithHttpStatusController
      */
     public function show(Term $term)
     {
-        return $this->respond(['term' => new TermResource($term->load(['sessions','subjects']))]);
+        return $this->respond(['term' => new TermResource($term)]);
     }
 
     /**
@@ -97,7 +97,7 @@ class AdminTermController extends RespondsWithHttpStatusController
 
         return $this->respond([
             'message' => 'A term was updated successfully',
-            'term' => new TermResource($term->load('sessions'))
+            'term' => new TermResource($term)
         ]);
     }
 
@@ -110,9 +110,7 @@ class AdminTermController extends RespondsWithHttpStatusController
      */
     public function destroy(Term $term)
     {
-        if ($term->deleted_at != null){
-            throw ValidationException::withMessages(['message' => 'term is already deleted and inactive']);
-        }
+        $this->authorize('delete', $term);
 
         $term->update(['status'  => 'inactive']);
 
@@ -135,9 +133,7 @@ class AdminTermController extends RespondsWithHttpStatusController
             ->withTrashed()
             ->firstOrFail();
 
-        if ($term->deleted_at == null){
-            throw ValidationException::withMessages(['message' => 'term is already restored and active']);
-        }
+        $this->authorize('restore', $term);
 
         $term->restore();
 
@@ -145,7 +141,7 @@ class AdminTermController extends RespondsWithHttpStatusController
 
         return $this->respond([
             'message' => 'Term was restore successfully',
-            'term' => new TermResource($term->load('session'))
+            'term' => new TermResource($term)
         ]);
     }
 }

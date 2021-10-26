@@ -9,6 +9,7 @@ use App\Http\Resources\TeacherResource;
 use App\Models\SchoolOwner;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 
 
 class AdminTeacherController extends Controller
@@ -20,8 +21,8 @@ class AdminTeacherController extends Controller
      */
     public function index()
     {
-        $teachers = Teacher::query()
-            ->with(['classrooms', 'students', 'subjects', 'roles'])
+        $teachers = QueryBuilder::for(Teacher::class)
+            ->allowedIncludes(['classrooms', 'students', 'subjects', 'roles'])
             ->withTrashed()
             ->get();
 
