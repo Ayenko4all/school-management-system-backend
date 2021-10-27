@@ -41,6 +41,6 @@ class UserPermissionRule implements Rule
      */
     public function message()
     {
-        return 'The :attribute does not exist.';
+        return 'One of the selected :attribute does not exist.';
     }
 }
