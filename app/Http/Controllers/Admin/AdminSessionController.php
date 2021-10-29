@@ -24,6 +24,7 @@ class AdminSessionController extends RespondsWithHttpStatusController
     public function index(Request $request)
     {
         $sessions = QueryBuilder::for(Session::class)
+            ->withTrashed()
             ->defaultSort('-created_at')
             ->allowedSorts(['name','start_date','end_date','status'])
             ->allowedFilters(['name'])
