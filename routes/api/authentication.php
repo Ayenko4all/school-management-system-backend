@@ -43,6 +43,7 @@ Route::prefix('v1')->middleware(['json.response'])->group(function (){
 
         Route::prefix('/options')->name('options.')->group(function (){
             Route::get('terms', [OptionController::class, 'terms'])->name('terms');
+            Route::get('sessions', [OptionController::class, 'sessions'])->name('sessions');
         });
     });
 

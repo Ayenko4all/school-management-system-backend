@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\RespondsWithHttpStatusController;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\Session;
 use App\Models\Term;
 use App\Options\DefaultRole;
 use App\Options\TermOption;
@@ -68,5 +69,25 @@ class OptionController extends RespondsWithHttpStatusController
         Cache::put('roleName', $roles, now()->addDay());
 
         return $this->respond(['roleOptions' => Cache::get('roleName')]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return JsonResponse
+     */
+    public function sessions()
+    {
+        if (Cache::has('sessionName')){
+            return $this->respond(['sessionOptions' => Cache::get('sessionName')]);
+        }
+
+        $sessions =  QueryBuilder::for(Session::class)
+            ->select(['id','name'])
+            ->get();
+
+        Cache::put('sessionName', $sessions, now()->addDay());
+
+        return $this->respond(['sessionOptions' => Cache::get('sessionName')]);
     }
 }
