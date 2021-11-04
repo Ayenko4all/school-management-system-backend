@@ -6,6 +6,7 @@ use App\Models\Session;
 use App\Models\Term;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\ValidationException;
 
 class CreateTermRequest extends FormRequest
 {
@@ -26,19 +27,23 @@ class CreateTermRequest extends FormRequest
      */
     public function rules()
     {
-        $session = Session::select(['start_date','end_date','name'])->where('id', $this->input('session'))->first();
-        return [
-            'name' => ['required', 'string', function ($value, $attribute, $fail) use ($session){
-                $terms = Term::where('name', $attribute)
-                ->whereRelation('sessions', 'session_id', $this->input('session'))->exists();
-                if ($terms) {
-                    $fail("The selected term already exists for " .strtolower($session->name));
-                }
-            }],
-            'start_date' => ['required', 'date_format:Y-m-d', "after_or_equal:{$session->start_date}"],
-            'end_date' => ['required', 'date_format:Y-m-d', 'after:start_date', "before_or_equal:{$session->end_date}", ''],
-            'session' => ['required', 'exists:sessions,id']
-        ];
+        $session = Session::select(['start_date','end_date','name','id'])->where('id', $this->input('session'))->first();
+        if (! $session){
+            throw ValidationException::withMessages(['session' => 'Selected session does not exist.']);
+        } else {
+            $rules = [
+                'name' => ['required', 'string', function ($value, $attribute, $fail) use ($session){
+                    $terms = Term::where('name', $attribute)
+                        ->whereRelation('sessions', 'session_id', $this->input('session'))->exists();
+                    if ($terms) {
+                        $fail("The selected term already exists for " .strtolower($session->name));
+                    }
+                }],
+                'start_date' => ['required', 'date_format:Y-m-d', "after_or_equal:{$session->start_date}"],
+                'end_date' => ['required', 'date_format:Y-m-d', 'after:start_date', "before_or_equal:{$session->end_date}", ''],
+            ];
+        }
+        return $rules;
     }
 
     public function messages()
