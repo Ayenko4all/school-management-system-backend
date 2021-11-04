@@ -32,7 +32,7 @@ class CreateTermRequest extends FormRequest
             throw ValidationException::withMessages(['session' => 'selected session does not exist.']);
         } else {
             $rules = [
-                'name' => ['required', 'string', 'exists:terms,name', function ($value, $attribute, $fail) use ($session){
+                'name' => ['required', 'string', function ($value, $attribute, $fail) use ($session){
                     $terms = Term::where('name', $attribute)
                         ->whereRelation('sessions', 'session_id', $this->input('session'))->exists();
                     if ($terms) {
