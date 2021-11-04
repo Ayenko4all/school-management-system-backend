@@ -40,7 +40,7 @@ class CreateTermRequest extends FormRequest
                     }
                 }],
                 'start_date' => ['required', 'date_format:Y-m-d', "after_or_equal:{$session->start_date}"],
-                'end_date' => ['required', 'date_format:Y-m-d', 'after:start_date', "before_or_equal:{$session->end_date}", ''],
+                'end_date' => ['required', 'date_format:Y-m-d', 'after:start_date', "before_or_equal:{$session->end_date}"],
             ];
         }
         return $rules;
