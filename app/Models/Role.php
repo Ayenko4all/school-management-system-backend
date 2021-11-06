@@ -3,6 +3,7 @@
 namespace App\Models;
 use App\Enums\RoleEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Permission\Models\Role as BaseRole;
 
 /**
@@ -37,6 +38,7 @@ class Role extends BaseRole
 {
 
     use HasFactory;
+    use SoftDeletes;
 
     protected $guard_name = '*';
 
@@ -47,6 +49,8 @@ class Role extends BaseRole
      * @var array
      */
     protected $appends = ['can_be_renamed'];
+
+    protected $hidden = ['can_be_renamed'];
 
     /**
      * Set the role's name.

@@ -42,7 +42,7 @@ return [
         ],
 
         'api' => [
-            'driver' => 'passport',
+            'driver' => 'sanctum',
             'provider' => 'users',
             'hash' => false,
         ],
@@ -94,10 +94,10 @@ return [
 
     'verification' => [
         'email' => [
-            'expire' => 30,
+            'expire' => 60,
         ],
         'telephone' => [
-            'expire' => 30,
+            'expire' => 60,
         ],
     ],
 
@@ -113,6 +113,16 @@ return [
             'throttle' => 60,
             'token'    => env('PASSWORD_RESET_TOKEN_EXPIRATION', 30),
         ],
+    ],
+
+    'paystack' => [
+        'url' => [
+            'transaction' => env('PAYSTACK_PAYMENT_INITIALIZATION'),
+            'verify' => env('PAYSTACK_PAYMENT_VERIFICATION')
+        ],
+        'api_key' => [
+            'sk_test' => env('PAYSTACK_SK_TEST_KEY')
+        ]
     ],
 
     /*

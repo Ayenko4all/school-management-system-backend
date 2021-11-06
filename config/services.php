@@ -30,4 +30,11 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'paystack' => [
+        'base_url'       => env('PAYSTACK_BASE_URL', 'https://api.paystack.co'),
+        'secret_key'     => env('PAYSTACK_SECRET_KEY'),
+        'public_key'     => env('PAYSTACK_PUBLIC_KEY'),
+        'webhook_header' => env('PAYSTACK_WEBHOOK_HEADER', 'X-Paystack-Signature'),
+    ],
+
 ];

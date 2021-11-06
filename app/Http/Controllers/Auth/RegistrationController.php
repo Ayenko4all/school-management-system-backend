@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Enums\RoleEnum;
+use App\Enums\StatusEnum;
 use App\Enums\VerificationEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\RespondsWithHttpStatusController;
 use App\Http\Requests\RegistrationFormRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Token;
@@ -14,48 +16,45 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class RegistrationController extends Controller
+class RegistrationController extends RespondsWithHttpStatusController
 {
     /**
-     *  @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function __invoke(RegistrationFormRequest $request)
     {
-        Token::where('email', $request->email)->where('type', VerificationEnum::VERIFICATION)->delete();
+        Token::where('email', $request->email)->where('type', VerificationEnum::Email)->delete();
 
-         User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'gender' => $request->gender,
-           'telephone' => $request->telephone,
-           'password' => Hash::make($request->password),
-        ])->assignRoleToUser([RoleEnum::USER]);
+        $password = generateTempPassword();
+
+        $user = User::create([
+             'first_name'   => $request->first_name,
+             'last_name'    => $request->last_name,
+             'email'        => $request->email,
+             'gender'       => $request->gender,
+             'telephone'    => $request->telephone,
+             'password'     => Hash::make($password),
+             'status'       => StatusEnum::ACTIVE
+        ])
+            ->assignRole($request->input('roles'));
 
         $tokenData = Token::create([
-            'token' =>  $this->generateToken(),
+            'token' =>  generateToken(),
             'email' => $request->email,
-            'type' => VerificationEnum::VERIFICATION
+            'type' => VerificationEnum::Email
         ]);
 
-        \Notification::route('mail', $request->email)->notify(new SendEmailTokenNotification($tokenData->token));
+        $user->notify(new SendEmailTokenNotification($tokenData->token, $password));
 
-        return  response()->json([
-            'status' => 'success',
-            'body' => 'Registration successful, Please check your email for a verification code',
-        ], 201);
+        return  $this->responseOk([
+            'message' => 'Registration successful, An email has been sent to the user',
+        ]);
 
     }
 
-    protected function generateToken()
-    {
-        do {
-            $token = mt_rand(100000, 999999);
-        } while (Token::where('token', $token)->exists());
 
-        return (string) $token;
-    }
 
 
 }

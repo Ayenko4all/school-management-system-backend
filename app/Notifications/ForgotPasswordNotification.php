@@ -46,7 +46,7 @@ class ForgotPasswordNotification extends Notification
         return (new MailMessage)
             ->subject(Lang::get('Verify Password Token'))
             ->greeting(Lang::get('Hello from V-school!'))
-            ->line(Lang::get('Your password verification token is **:token**. It expires in :count minutes.', ['count' => config('auth.verification.email.expire'), 'token' => $this->token]))
+            ->line(Lang::get('Your password verification token is **:token**. It expires in :count minutes.', ['count' => config('auth.passwords.users.token'), 'token' => $this->token]))
             ->line(Lang::get('If you did not request a verification token, no further action is required. Thank you.'));
     }
 

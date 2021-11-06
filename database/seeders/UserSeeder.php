@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Enums\RoleEnum;
 use App\Models\User;
+use App\Options\DefaultRole;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -15,10 +16,9 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        User::factory()->count(5)->create();
-
+        User::factory()->create()->assignRoleToUser([DefaultRole::STUDENT]);
         User::factory()->create([
-            'email' => 'siteOwner@gmail.com'
-        ])->assignRoleToUser([RoleEnum::SITEADMIN]);
+            'email' => 'admin@gmail.com'
+        ])->assignRoleToUser([DefaultRole::ADMIN]);
     }
 }

@@ -22,8 +22,8 @@ class RoleSeeder extends Seeder
             Role::create(['name'=> $role]);
         }
 
-        Role::findByName(RoleEnum::SITEADMIN)->givePermissionTo(Permission::all());
-        Role::findByName(RoleEnum::SCHOOLOWNER)->givePermissionTo(Permission::all());
-        Role::findByName(RoleEnum::SUPERADMIN)->givePermissionTo(Permission::all());
+        Role::findByName(RoleEnum::ADMIN)->givePermissionTo(Permission::all());
+        Role::findByName(RoleEnum::TEACHER)->givePermissionTo(['update-teacher','create-teacher','view-teacher',]);
+        Role::findByName(RoleEnum::STUDENT)->givePermissionTo([ 'update-student','create-student','view-student']);
     }
 }

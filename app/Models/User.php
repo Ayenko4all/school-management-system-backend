@@ -4,32 +4,44 @@ namespace App\Models;
 
 use App\Enums\RoleEnum;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+
+
+/**
+ * App\Models\User.
+ *
+ * @property null|string                                                                                               $password
+ * @property null|string                                                                                               $first_name
+ * @property null|string                                                                                               $last_name
+ * @property null|string                                                                                               $email
+ * @property null|string                                                                                               $telephone
+ * @property null|string                                                                                               $gender
+ * @property null|\Illuminate\Support\Carbon                                                                           $email_verified_at
+ * @property null|\Illuminate\Support\Carbon                                                                           $telephone_verified_at
+ * @property null|\Illuminate\Support\Carbon                                                                           $created_at
+ * @property null|\Illuminate\Support\Carbon                                                                           $updated_at
+ * @property null|\Illuminate\Support\Carbon                                                                           $deleted_at
+ * @property \App\Models\Permission[]|Collection                                                                       $permissions
+ * @property \App\Models\Role[]|Collection                                                                             $roles
+ *
+ *@mixin \Eloquent
+ */
 
 class User extends Authenticatable
 {
-    use HasFactory,HasRoles, Notifiable, HasApiTokens;
+    use HasFactory,HasRoles, Notifiable, HasApiTokens, SoftDeletes;
 
     public $guard_name = '*';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'first_name',
-        'last_name',
-        'email',
-        'password',
-        'telephone',
-        'address',
-        'gender',
-    ];
+    protected $guarded = [];
+
+    protected $dates = ['deleted_at'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -60,4 +72,16 @@ class User extends Authenticatable
     public static function authAccessToken($param){
         return self::where('email', $param)->first()->createToken(config('auth.token.name'));
     }
+
+    public function teacher(){
+        return $this->hasOne(Teacher::class, 'id', 'teacher_id');
+    }
+
+    public function expiration($token){
+        $expiration = $this->tokens()->where('id', $token)->select(['expires_in'])->first();
+        return $expiration->expires_in;
+    }
+
+
+
 }

@@ -19,6 +19,7 @@ class CreateModulesTable extends Migration
             $table->float('price');
             $table->string('condition');
             $table->string('status')->default('active');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

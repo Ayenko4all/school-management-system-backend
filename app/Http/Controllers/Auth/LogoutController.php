@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\RespondsWithHttpStatusController;
 use Illuminate\Http\Request;
-use Laravel\Passport\Token;
+use Laravel\Sanctum\Sanctum;
+use App\Models\PersonalAccessToken;
 
-class LogoutController extends Controller
+class LogoutController extends RespondsWithHttpStatusController
 {
     /**
      * Handle a logout request to the application.
@@ -15,8 +17,8 @@ class LogoutController extends Controller
      */
     public function __invoke()
     {
-        Token::where('user_id', auth()->id())->delete();
+        auth()->user()->tokens()->delete();
 
-        return response()->json([]);
+        return $this->responseNoContent();
     }
 }
