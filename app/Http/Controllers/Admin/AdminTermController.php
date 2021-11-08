@@ -28,13 +28,14 @@ class AdminTermController extends RespondsWithHttpStatusController
     {
         $terms = QueryBuilder::for(Term::class)
             ->withTrashed()
+            ->with('sessions')
             ->defaultSort('-created_at')
             ->allowedSorts(['name','start_date','end_date','status'])
             ->allowedFilters(['name'])
             ->jsonPaginate()
             ->appends($request->query());
 
-        return $this->respond(['terms' =>  TermResource::collection($terms->load('sessions'))->response()->getData(true)]);
+        return $this->respond(['terms' =>  TermResource::collection($terms)->response()->getData(true)]);
     }
 
     /**
