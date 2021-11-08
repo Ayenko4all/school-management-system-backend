@@ -30,12 +30,11 @@ class AdminTermController extends RespondsWithHttpStatusController
             ->withTrashed()
             ->defaultSort('-created_at')
             ->allowedSorts(['name','start_date','end_date','status'])
-            ->allowedIncludes(['sessions'])
             ->allowedFilters(['name'])
             ->jsonPaginate()
             ->appends($request->query());
 
-        return $this->respond(['terms' =>  TermResource::collection($terms)->response()->getData(true)]);
+        return $this->respond(['terms' =>  TermResource::collection($terms->load('sessions'))->response()->getData(true)]);
     }
 
     /**
