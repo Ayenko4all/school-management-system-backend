@@ -19,6 +19,7 @@ class ClassroomResource extends JsonResource
             'name'          => $this->name,
             'slug'          => $this->slug,
             'status'        => $this->status,
+            'deleted_at'    => $this->deleted_at,
             'created_at'    => $this->created_at,
             'updated_at'    => $this->updated_at,
             'subjects'      => SubjectResource::collection($this->whenLoaded('subjects')),

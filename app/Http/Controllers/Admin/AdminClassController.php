@@ -28,6 +28,7 @@ class AdminClassController extends RespondsWithHttpStatusController
             ->defaultSort('-created_at')
             ->allowedSorts(['name','status'])
             ->allowedFilters(['name'])
+            ->allowedIncludes(['sessions'])
             ->jsonPaginate()
             ->appends($request->query());
 

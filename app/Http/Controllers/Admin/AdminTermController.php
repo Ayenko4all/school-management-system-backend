@@ -30,6 +30,7 @@ class AdminTermController extends RespondsWithHttpStatusController
             ->withTrashed()
             ->defaultSort('-created_at')
             ->allowedSorts(['name','start_date','end_date','status'])
+            ->allowedIncludes(['sessions'])
             ->allowedFilters(['name'])
             ->jsonPaginate()
             ->appends($request->query());
