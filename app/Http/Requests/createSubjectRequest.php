@@ -6,6 +6,7 @@ use App\Models\Subject;
 use App\Models\Term;
 use App\Rules\CreateClassroomRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\ValidationException;
 
 class CreateSubjectRequest extends FormRequest
 {
@@ -27,21 +28,25 @@ class CreateSubjectRequest extends FormRequest
     public function rules()
     {
         $term = Term::where('name', $this->input('term'))->pluck('id')->first();
-        return [
-            'session' => ['required', 'exists:sessions,id'],
-            'classroom' => ['required', 'exists:classrooms,id'],
-            'term' => ['required', 'exists:terms,name'],
-            'name' => ['required', 'string', function ($value, $attribute, $fail) use($term){
-                $name = Subject::where('name', strtolower($attribute))
-                    ->where('term_id', $term)
-                    ->whereRelation('classrooms', 'classroom_id', '=', $this->input('classroom'))
-                    ->first();
-               // dd($name);
-                if ($name) {
-                    $fail("The selected subject already exists for the selected term and classroom");
-                }
-            }],
-        ];
+        if (! $term){
+            throw ValidationException::withMessages(['term' => 'selected term does not exist.']);
+        } else {
+            return [
+                'session' => ['required', 'exists:sessions,id'],
+                'classroom' => ['required', 'exists:classrooms,id'],
+                'term' => ['required', 'exists:terms,name'],
+                'name' => ['required', 'string', function ($value, $attribute, $fail) use($term){
+                    $name = Subject::where('name', strtolower($attribute))
+                        ->where('term_id', $term)
+                        ->whereRelation('classrooms', 'classroom_id', '=', $this->input('classroom'))
+                        ->first();
+                    // dd($name);
+                    if ($name) {
+                        $fail("The selected subject already exists for the selected term and classroom");
+                    }
+                }],
+            ];
+        }
     }
 
     public function messages()

@@ -6,6 +6,7 @@ use App\Models\Subject;
 use App\Models\Term;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class UpdateSubjectRequest extends FormRequest
 {
@@ -27,21 +28,26 @@ class UpdateSubjectRequest extends FormRequest
     public function rules(Subject $subject)
     {
         $term = Term::where('id', $this->input('term'))->pluck('id')->first();
-        return [
-            'session' => ['required', 'exists:sessions,id'],
-            'term' => ['required', 'exists:terms,id'],
-            'status'  => ['required', 'boolean'],
-            'classroom' => ['required','exists:classrooms,id'],
-            'name'  => ['required', 'string',
-                function($value, $attribute, $fail) use($term, $subject){
-                    $name = Subject::where('name', strtolower($attribute))
-                        ->where('term_id', $term)
-                        ->whereRelation('classrooms', 'classroom_id', $this->input('classroom'))->first();
-                    if ($name) {
-                        $fail("The selected subject already exists for the selected term and classroom");
-                    }
-                }],
-        ];
+        if(! $term){
+            throw ValidationException::withMessages(['term' => 'selected term does not exist.']);
+        } else {
+            return [
+                'session' => ['required', 'exists:sessions,id'],
+                'term' => ['required', 'exists:terms,id'],
+                'status'  => ['required', 'boolean'],
+                'classroom' => ['required','exists:classrooms,id'],
+                'name'  => ['required', 'string',
+                    function($value, $attribute, $fail) use($term, $subject){
+                        $name = Subject::where('name', strtolower($attribute))
+                            ->where('term_id', $term)
+                            ->whereRelation('classrooms', 'classroom_id', $this->input('classroom'))->first();
+                        if ($name) {
+                            $fail("The selected subject already exists for the selected term and classroom");
+                        }
+                    }],
+            ];
+        }
+
     }
 
     public function messages()

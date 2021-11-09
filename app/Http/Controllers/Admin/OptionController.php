@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\RespondsWithHttpStatusController;
+use App\Models\Classroom;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\Session;
 use App\Models\Term;
 use App\Options\DefaultRole;
+use App\Options\SubjectTypeOptions;
 use App\Options\TermOption;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -21,9 +23,8 @@ class OptionController extends RespondsWithHttpStatusController
     /**
      * Display a listing of the resource.
      *
-     * @return JsonResponse
      */
-    public function terms()
+    public function terms(): JsonResponse
     {
         $terms =  defaultOptionNames(TermOption::class);
 
@@ -33,9 +34,19 @@ class OptionController extends RespondsWithHttpStatusController
     /**
      * Display a listing of the resource.
      *
-     * @return JsonResponse
      */
-    public function permissions()
+    public function subjectsType(): JsonResponse
+    {
+        $subjectTypeOptions =  defaultOptionNames(SubjectTypeOptions::class);
+
+        return $this->respond(['subjectTypeOptions' => $subjectTypeOptions]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     */
+    public function permissions(): JsonResponse
     {
         if (Cache::has('PermissionName')){
             return $this->respond(['permissionOptions' => Cache::get('PermissionName')]);
@@ -55,7 +66,7 @@ class OptionController extends RespondsWithHttpStatusController
      *
      * @return JsonResponse
      */
-    public function roles()
+    public function roles(): JsonResponse
     {
         if (Cache::has('roleName')){
             return $this->respond(['roleOptions' => Cache::get('roleName')]);
@@ -76,7 +87,7 @@ class OptionController extends RespondsWithHttpStatusController
      *
      * @return JsonResponse
      */
-    public function sessions()
+    public function sessions(): JsonResponse
     {
         if (Cache::has('sessionName')){
             return $this->respond(['sessionOptions' => Cache::get('sessionName')]);
@@ -90,4 +101,25 @@ class OptionController extends RespondsWithHttpStatusController
 
         return $this->respond(['sessionOptions' => Cache::get('sessionName')]);
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return JsonResponse
+     */
+    public function classroomOption()
+    {
+        if (Cache::has('classroomName')){
+            return $this->respond(['classroomOptions' => Cache::get('classroomName')]);
+        }
+
+        $classrooms =  QueryBuilder::for(Classroom::class)
+            ->select(['id','name'])
+            ->get();
+
+        Cache::put('classroomName', $classrooms, now()->addDay());
+
+        return $this->respond(['classroomOptions' => Cache::get('classroomName')]);
+    }
+
 }

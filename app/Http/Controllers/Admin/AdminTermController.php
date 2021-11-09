@@ -77,7 +77,7 @@ class AdminTermController extends RespondsWithHttpStatusController
      */
     public function show(Term $term)
     {
-        return $this->respond(['term' => new TermResource($term)]);
+        return $this->respond(['term' => new TermResource($term->load('sessions'))]);
     }
 
     /**

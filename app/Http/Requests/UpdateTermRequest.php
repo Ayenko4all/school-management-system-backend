@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Session;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class UpdateTermRequest extends FormRequest
 {
@@ -26,12 +27,16 @@ class UpdateTermRequest extends FormRequest
     public function rules()
     {
         $session = Session::select(['start_date','end_date','name'])->where('id', $this->input('session'))->first();
-        return [
-            'name' => ['required', 'string', 'exists:terms,name',Rule::unique('terms')->ignore($this->route('term'))],
-            'start_date' => ['required', 'date_format:Y-m-d', "after_or_equal:{$session->start_date}"],
-            'end_date' => ['required', 'date_format:Y-m-d', 'after:start_date', "before_or_equal:{$session->end_date}"],
-            'session' => ['required', 'exists:sessions,id']
-        ];
+        if (! $session){
+            throw ValidationException::withMessages(['session' => 'selected session does not exist.']);
+        } else {
+            return [
+                'name' => ['required', 'string', 'exists:terms,name',Rule::unique('terms')->ignore($this->route('term'))],
+                'start_date' => ['required', 'date_format:Y-m-d', "after_or_equal:{$session->start_date}"],
+                'end_date' => ['required', 'date_format:Y-m-d', 'after:start_date', "before_or_equal:{$session->end_date}"],
+            ];
+        }
+
     }
 
     public function messages()

@@ -3,6 +3,7 @@
 use App\Enums\RoleEnum;
 use App\Models\Token;
 use App\Options\DefaultRole;
+use App\Options\SubjectTypeOptions;
 use App\Options\TermOption;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -76,6 +77,10 @@ if (! function_exists('defaultOptionNames')) {
             return Cache::get('defaultTermNames');
         }
 
+          if ($optionsClass === SubjectTypeOptions::class && Cache::has('SubjectTypeNames')) {
+              return Cache::get('SubjectTypeNames');
+          }
+
         if ($optionsClass === DefaultRole::class && Cache::has('defaultRoleName')) {
             return Cache::get('defaultRoleName');
         }
@@ -100,6 +105,11 @@ if (! function_exists('defaultOptionNames')) {
         if ($optionsClass === DefaultRole::class) {
             Cache::put('defaultRoleName', $newOptionArray, now()->addDay());
             return Cache::get('defaultRoleName');
+        }
+
+        if ($optionsClass === SubjectTypeOptions::class) {
+            Cache::put('SubjectTypeNames', $newOptionArray, now()->addDay());
+            return Cache::get('SubjectTypeNames');
         }
 
     }
