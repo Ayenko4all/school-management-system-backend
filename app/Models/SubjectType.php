@@ -41,6 +41,6 @@ class SubjectType extends Model
     protected $guarded = [];
 
     public function subject(){
-        return $this->belongsTo('subjectType');
+        return $this->hasMany(Subject::class, 'subject_type_id');
     }
 }

@@ -56,6 +56,6 @@ class Subject extends Model
     }
 
     public function subject_type(){
-        return $this->hasMany(SubjectType::class);
+        return $this->belongsTo(SubjectType::class);
     }
 }

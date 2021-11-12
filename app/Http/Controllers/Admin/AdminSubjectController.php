@@ -31,6 +31,7 @@ class AdminSubjectController extends RespondsWithHttpStatusController
     {
         $subjects = QueryBuilder::for(Subject::class)
             ->withTrashed()
+            ->with(['subject_type','classrooms','term','session'])
             ->defaultSort('-created_at')
             ->allowedSorts(['name','status'])
             ->allowedFilters(['name'])
@@ -76,7 +77,7 @@ class AdminSubjectController extends RespondsWithHttpStatusController
             ->firstOrFail();
 
         return $this->respond([
-            'Subject' =>  new SubjectResource($subject)
+            'Subject' =>  new SubjectResource($subject->load(['subject_type','classrooms','term','session']))
         ]);
     }
 
@@ -106,12 +107,13 @@ class AdminSubjectController extends RespondsWithHttpStatusController
 
         $subject->update([
             'name'  =>  strtolower($request->input('name')),
-            'classroom_id'  =>  $request->input('classroom'),
             'term_id'  =>  $request->input('term'),
             'session_id'  =>  $request->input('session'),
             'subject_type_id'  =>  $request->input('subject_type'),
             'status'    =>  $request->input('status'),
         ]);
+
+        $subject->classrooms()->sync($request->input('classroom'));
 
         return $this->respond([
             'message' => 'A Subject was updated successfully',

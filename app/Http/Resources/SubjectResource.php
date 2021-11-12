@@ -21,6 +21,7 @@ class SubjectResource extends JsonResource
             'status'        => $this->status,
             'created_at'    => $this->created_at,
             'updated_at'    => $this->updated_at,
+            'subject_type'          => new SessionResource($this->whenLoaded('subject_type')),
             'term'          => new TermResource($this->whenLoaded('term')),
             'session'          => new SessionResource($this->whenLoaded('session')),
             'classrooms'    => ClassroomResource::collection($this->whenLoaded('classrooms')),
