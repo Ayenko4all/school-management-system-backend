@@ -109,6 +109,7 @@ class AdminSubjectController extends RespondsWithHttpStatusController
             'classroom_id'  =>  $request->input('classroom'),
             'term_id'  =>  $request->input('term'),
             'session_id'  =>  $request->input('session'),
+            'subject_type_id'  =>  $request->input('subject_type'),
             'status'    =>  $request->input('status'),
         ]);
 
