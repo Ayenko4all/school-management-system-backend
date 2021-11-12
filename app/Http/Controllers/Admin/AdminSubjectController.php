@@ -8,11 +8,14 @@ use App\Http\Requests\CreateSubjectRequest;
 use App\Http\Requests\UpdateSubjectRequest;
 use App\Http\Resources\SubjectResource;
 use App\Models\Subject;
+use App\Models\SubjectType;
 use App\Models\Term;
 use App\Models\User;
 use App\Rules\CreateClassroomRule;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Rule;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -50,6 +53,7 @@ class AdminSubjectController extends RespondsWithHttpStatusController
             'name'  =>  strtolower($request->input('name')),
             'term_id'  =>  $term,
             'session_id'  =>  $request->input('session'),
+            'subject_type_id'  =>  $request->input('subject_type'),
         ]);
 
         $subject->classrooms()->attach($request->input('classroom'));
@@ -155,5 +159,23 @@ class AdminSubjectController extends RespondsWithHttpStatusController
             'message' => 'A Subject was restore successfully',
             'Subject' => new SubjectResource($subject)
         ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     */
+    public function types()
+    {
+        if (Cache::has('typeName')){
+            return $this->respond(['typeNameOptions' => Cache::get('typeName')]);
+        }
+
+        $types =  SubjectType::select(['id', 'name'])
+            ->get();
+
+        Cache::put('typeName', $types, now()->addDay());
+
+        return $this->respond(['typeNameOptions' => Cache::get('typeName')]);
     }
 }

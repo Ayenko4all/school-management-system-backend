@@ -32,6 +32,7 @@ class UpdateSubjectRequest extends FormRequest
             throw ValidationException::withMessages(['term' => 'selected term does not exist.']);
         } else {
             return [
+                'subject_type' => ['required', 'exists:subject_types,id'],
                 'session' => ['required', 'exists:sessions,id'],
                 'term' => ['required', 'exists:terms,id'],
                 'status'  => ['required', 'boolean'],

@@ -103,11 +103,11 @@ Route::prefix('v1/admin')->middleware(['json.response'])->group(function (){
 
 
         Route::prefix('/options')->name('options.')->group(function (){
-            Route::get('classroomOption', [OptionController::class, 'classroomOption'])->name('classroomOption');
+            Route::get('classrooms', [OptionController::class, 'classrooms'])->name('classrooms');
             Route::get('roles', [OptionController::class, 'roles'])->name('roles');
             Route::get('permissions', [OptionController::class, 'permissions'])->name('permission');
-            Route::get('subjectsType', [OptionController::class, 'subjectsType'])->name('subjectsType');
 
+            Route::get('subject/types', [AdminSubjectController::class, 'types'])->name('types');
         });
 
     });

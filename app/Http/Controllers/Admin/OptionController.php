@@ -8,6 +8,7 @@ use App\Models\Classroom;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\Session;
+use App\Models\SubjectType;
 use App\Models\Term;
 use App\Options\DefaultRole;
 use App\Options\SubjectTypeOptions;
@@ -29,17 +30,6 @@ class OptionController extends RespondsWithHttpStatusController
         $terms =  defaultOptionNames(TermOption::class);
 
         return $this->respond(['termOptions' => $terms]);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     */
-    public function subjectsType(): JsonResponse
-    {
-        $subjectTypeOptions =  defaultOptionNames(SubjectTypeOptions::class);
-
-        return $this->respond(['subjectTypeOptions' => $subjectTypeOptions]);
     }
 
     /**
@@ -107,7 +97,7 @@ class OptionController extends RespondsWithHttpStatusController
      *
      * @return JsonResponse
      */
-    public function classroomOption()
+    public function classrooms(): JsonResponse
     {
         if (Cache::has('classroomName')){
             return $this->respond(['classroomOptions' => Cache::get('classroomName')]);
