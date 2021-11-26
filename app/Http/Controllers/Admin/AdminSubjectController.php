@@ -48,7 +48,7 @@ class AdminSubjectController extends RespondsWithHttpStatusController
      */
     public function store(CreateSubjectRequest $request)
     {
-        $term = Term::where('name', $request->input('term'))->pluck('id')->firstOrFail();
+        $term = Term::where('name', $request->input('term'))->pluck('id')->first();
 
         $subject = Subject::create([
             'name'  =>  strtolower($request->input('name')),
