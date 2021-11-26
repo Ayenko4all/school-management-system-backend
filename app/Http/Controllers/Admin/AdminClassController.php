@@ -65,7 +65,7 @@ class AdminClassController extends RespondsWithHttpStatusController
             ->firstOrFail();
 
         return $this->respond([
-            'classroom' =>  new ClassroomResource($classroom)
+            'classroom' =>  new ClassroomResource($classroom->load(['session']))
         ]);
     }
 
